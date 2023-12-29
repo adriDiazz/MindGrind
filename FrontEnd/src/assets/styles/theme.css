@@ -1,0 +1,29 @@
+
+:root {
+    --dark-blue: #1E344F;
+    --black: #000000;
+    --white: #FFFFFF;
+    --background-body: #F5F5F5;
+    --purple: #5552FF;
+    --card-green:#E6F5D0;
+    --card-blue:#E7EEFA;
+    --card-purple:#EFE4FC;
+    --swiper-theme-color: #BBF246;
+}
+
+@font-face {
+    font-family: 'MazzardM';
+    src: url("fonts/MazzardH-Medium.otf");
+}
+@font-face {
+    font-family: 'MazzardR';
+    src: url("fonts/MazzardH-Regular.otf");
+}
+@font-face {
+    font-family: 'CabinetBold';
+    src: url("fonts/CabinetGrotesk-Bold.otf");
+}
+@font-face {
+    font-family: 'CabinetMedium';
+    src: url("fonts/CabinetGrotesk-Medium.otf");
+}

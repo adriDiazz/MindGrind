@@ -1,0 +1,6 @@
+@import url(normalicer.css);
+@import url(theme.css);
+
+body {
+    background-color: var(--background-body);
+}

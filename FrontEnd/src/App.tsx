@@ -1,17 +1,17 @@
-import { UserCard } from "./sections/users/UserCard";
-import { useUsers } from "./sections/users/useUsers";
+import { Route, Routes } from "react-router-dom";
+
+import HomePage from "./sections/HomePage/HomePage";
+import Landing from "./sections/Landing/Landing";
+import NavBar from "./sections/Ui/NavBar";
 
 export function App() {
-	const users = useUsers();
-
 	return (
-		<div className="App">
-			<h3>⚡⚛️ Vite React Best Practices Template (by Codely)</h3>
-			<h2>Current users</h2>
-
-			{users.map((user) => (
-				<UserCard key={user.name} user={user} />
-			))}
-		</div>
+		<>
+			<NavBar />
+			<Routes>
+				<Route path="/" element={<Landing />} />
+				<Route path="/home" element={<HomePage />} />
+			</Routes>
+		</>
 	);
 }
