@@ -2,10 +2,13 @@ import { useState } from "react";
 
 import LoginModal from "../Login/LoginModal";
 import Button from "../Ui/Button";
+import ModalComponent from "../Ui/ModalComponent";
 import styles from "./Landing.module.scss";
 import TierCard from "./TierCard";
 
 const Landing = () => {
+	const [opened, setOpened] = useState(false);
+
 	return (
 		<>
 			<div className={styles.wrapper}>
@@ -22,7 +25,9 @@ const Landing = () => {
 						</p>
 						<div className={styles.btnWrapper}>
 							<Button>Register</Button>
-							<Button isWhite>Log in</Button>
+							<Button isWhite onClick={() => setOpened(true)}>
+								Log in
+							</Button>
 						</div>
 					</div>
 					<img src="/imageVr.png" alt="" />
