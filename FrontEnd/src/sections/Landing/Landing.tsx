@@ -1,3 +1,6 @@
+import { useState } from "react";
+
+import LoginModal from "../Login/LoginModal";
 import Button from "../Ui/Button";
 import styles from "./Landing.module.scss";
 import TierCard from "./TierCard";
@@ -52,6 +55,32 @@ const Landing = () => {
 					<img src="/iaImage.png" alt="" className={styles.img} />
 				</div>
 			</div>
+			<div className={styles.footerWrapper}>
+				<div className={styles.socialIcons}>
+					<img src="/Vector.png" alt="" />
+					<img src="/Vector(1).png" alt="" />
+					<img src="/Vector(2).png" alt="" />
+				</div>
+				<div className="">
+					<h2>Company</h2>
+					<p>About</p>
+					<p>Blog</p>
+					<p>Careers</p>
+					<p>Contact</p>
+				</div>
+				<div className="">
+					<h2>Product</h2>
+					<p>Overview</p>
+					<p>Features</p>
+					<p>Integrations</p>
+					<p>Pricing</p>
+					<p>Use Cases</p>
+				</div>
+			</div>
+
+			<ModalComponent opened={opened} setOpened={setOpened}>
+				<LoginModal />
+			</ModalComponent>
 		</>
 	);
 };

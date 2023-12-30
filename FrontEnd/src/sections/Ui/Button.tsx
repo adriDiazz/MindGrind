@@ -4,6 +4,7 @@ interface ButtonProps {
 	className?: string;
 	children: React.ReactNode;
 	isWhite?: boolean;
+	onClick?: () => void;
 }
 
 const Button: React.FC<ButtonProps> = ({ className = "", isWhite, ...props }) => {

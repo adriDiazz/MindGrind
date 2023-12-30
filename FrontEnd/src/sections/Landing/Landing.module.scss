@@ -9,6 +9,7 @@
         display: flex;
         justify-content: space-evenly;
         align-items: center;
+        padding: 4rem;
 
         .rightWrapper {
             display: flex;
@@ -93,6 +94,7 @@
     width: 100vw;
     
     .text {
+        font-family: 'MazzardR';
         display: flex;
         justify-content: flex-start;
         align-items: flex-start;
@@ -111,7 +113,9 @@
 
     .img {
         padding-left: 7rem;//TODO - change to 12 when image is bigger
-        width: 80%; //TODO - change to 100% when image is bigger
+        width: 70%; //TODO - change to 100% when image is bigger
+        clip-path: polygon(79% 1%, 75% 26%, 0 29%, 0 100%, 99% 97%, 100% 77%, 100% 67%, 100% 0, 86% 0);
+
     }
 
     h2 {
@@ -123,3 +127,29 @@
 
 }
 
+.footerWrapper {
+    width: 100vw;
+    height: 20rem;
+    background-color: var(--card-purple);
+    margin-top: 15rem;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 10rem;
+    font-family: 'CabinetBold';
+}
+
+.socialIcons {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-direction: column;
+    gap: 1rem;
+    width: 20rem;
+    margin-top: 2rem;
+
+    img {
+        width: 2rem;
+
+    }
+}
