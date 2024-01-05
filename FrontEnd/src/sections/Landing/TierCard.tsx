@@ -5,6 +5,7 @@ import { FC } from "react";
 
 interface TierCardProps {
 	color?: string;
+	setOpened?: (value: boolean) => void;
 }
 
 interface TEXTSType {
@@ -29,7 +30,7 @@ const TEXTS: TEXTSType = {
 	},
 };
 
-const TierCard: FC<TierCardProps> = ({ color = "green" }) => {
+const TierCard: FC<TierCardProps> = ({ color = "green", setOpened }) => {
 	return (
 		<GlowCapture>
 			<Glow color="var(--purple)">
@@ -37,7 +38,16 @@ const TierCard: FC<TierCardProps> = ({ color = "green" }) => {
 					<span>{TEXTS[color].title}</span>
 					<p>{TEXTS[color].text}</p>
 					<div className="btnWrapper">
-						<button className={`btn-${color}`}>Register</button>
+						<button
+							className={`btn-${color}`}
+							onClick={() => {
+								if (setOpened) {
+									setOpened(true);
+								}
+							}}
+						>
+							Register
+						</button>
 					</div>
 				</div>
 			</Glow>

@@ -4,11 +4,13 @@ import LoginModal from "../Login/LoginModal";
 import Button from "./Button";
 import ModalComponent from "./ModalComponent";
 import styles from "./NavBar.module.scss";
+import NavMobile from "./NavMobile";
 
 const LINKS = ["Home", "About", "Contact"];
 
 const NavBar = () => {
 	const [opened, setOpened] = useState(false);
+	const [showMobileNav, setShowMobileNav] = useState(false);
 
 	return (
 		<>
@@ -17,20 +19,32 @@ const NavBar = () => {
 					<img src="/logo.png" alt="" />
 					<span>NoteTube</span>
 				</div>
+				<img
+					src="/navMobile.png"
+					alt=""
+					className={styles.navMobile}
+					onClick={() => {
+						setShowMobileNav(!showMobileNav);
+					}}
+				/>
 				<ul className={styles.navList}>
 					{LINKS.map((link) => (
-						<li>
+						<li key={link}>
 							<a href="todo" className={styles.link}>
 								{link}
 							</a>
 						</li>
 					))}
 				</ul>
-				<Button className={styles.button} onClick={() => setOpened(true)}>
+				<Button
+					className={`${styles.button} ${styles.navbtn}`}
+					onClick={() => setOpened(true)}
+					id="navbtn"
+				>
 					Log in
 				</Button>
 			</nav>
-
+			{showMobileNav && <NavMobile LINKS={LINKS} />}
 			<ModalComponent opened={opened} setOpened={setOpened}>
 				<LoginModal />
 			</ModalComponent>

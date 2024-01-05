@@ -24,7 +24,7 @@ const Landing = () => {
 							Lorem Ipsum ha sido el texto de relleno estándar de
 						</p>
 						<div className={styles.btnWrapper}>
-							<Button>Register</Button>
+							<Button onClick={() => setOpened(true)}>Register</Button>
 							<Button isWhite onClick={() => setOpened(true)}>
 								Log in
 							</Button>
@@ -41,9 +41,9 @@ const Landing = () => {
 			<div className={styles.tierWrapper}>
 				<h2>A Perfect Tool For Everyone</h2>
 				<div className={styles.cardWrapper}>
-					<TierCard color="green" />
-					<TierCard color="blue" />
-					<TierCard color="purple" />
+					<TierCard color="green" setOpened={setOpened} />
+					<TierCard color="blue" setOpened={setOpened} />
+					<TierCard color="purple" setOpened={setOpened} />
 				</div>
 			</div>
 
