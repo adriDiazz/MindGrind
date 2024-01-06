@@ -1,16 +1,18 @@
 import { useState } from "react";
 
-import LoginModal from "../Login/LoginModal";
+import AuthForm from "../Login/AuthForm";
 import Button from "./Button";
 import ModalComponent from "./ModalComponent";
 import styles from "./NavBar.module.scss";
 import NavMobile from "./NavMobile";
+import { useUser } from "../../context/UserContext";
 
 const LINKS = ["Home", "About", "Contact"];
 
 const NavBar = () => {
 	const [opened, setOpened] = useState(false);
 	const [showMobileNav, setShowMobileNav] = useState(false);
+	const { user, signOut } = useUser();
 
 	return (
 		<>
@@ -36,17 +38,27 @@ const NavBar = () => {
 						</li>
 					))}
 				</ul>
-				<Button
-					className={`${styles.button} ${styles.navbtn}`}
-					onClick={() => setOpened(true)}
-					id="navbtn"
-				>
-					Log in
-				</Button>
+				{user ? (
+					<Button
+						className={`${styles.button} ${styles.navbtn}`}
+						onClick={() => signOut()}
+						id="navbtn"
+					>
+						Log Out
+					</Button>
+				) : (
+					<Button
+						className={`${styles.button} ${styles.navbtn}`}
+						onClick={() => setOpened(true)}
+						id="navbtn"
+					>
+						Log in
+					</Button>
+				)}
 			</nav>
 			{showMobileNav && <NavMobile LINKS={LINKS} />}
 			<ModalComponent opened={opened} setOpened={setOpened}>
-				<LoginModal />
+				<AuthForm />
 			</ModalComponent>
 		</>
 	);

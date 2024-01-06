@@ -6,13 +6,15 @@ interface ButtonProps {
 	isWhite?: boolean;
 	id?: string;
 	onClick?: () => void;
+	type?: "button" | "submit" | "reset";
 }
 
-const Button: React.FC<ButtonProps> = ({ className = "", isWhite, id, ...props }) => {
+const Button: React.FC<ButtonProps> = ({ className = "", isWhite, id, type, ...props }) => {
 	return (
 		<button
 			{...props}
 			id={id}
+			type={type}
 			className={`${isWhite ? style.buttonWhite : ""}  ${
 				!isWhite ? style.button : ""
 			} ${className}                     
