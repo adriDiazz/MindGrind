@@ -11,17 +11,16 @@ interface LoginProps {
 const LoginModal: FC<LoginProps> = ({ setRegisterMode, registerMode }) => {
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
+	const [error, setError] = useState<string | null>(null);
 
 	const handleAuth = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		signIn({ username, password })
-			.then((data) => {
-				// eslint-disable-next-line no-console
-				console.log("Inicio de sesión exitoso", data);
+			.then(() => {
 				window.location.reload();
 			})
-			.catch((error) => {
-				console.error("Error al iniciar sesión:", error);
+			.catch((error: Error) => {
+				setError(error.message);
 			});
 	};
 
@@ -49,7 +48,7 @@ const LoginModal: FC<LoginProps> = ({ setRegisterMode, registerMode }) => {
 					value={password}
 					onChange={(e) => setPassword(e.target.value)}
 				/>
-
+				{error && <span className={styles.error}>{error}</span>}
 				<div className={styles.text}>
 					<span
 						onClick={() => {

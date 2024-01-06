@@ -1,6 +1,5 @@
-import { signUp } from "aws-amplify/auth";
+import { signIn, signUp } from "aws-amplify/auth";
 import { FC, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 import styles from "./LoginModal.module.scss";
 import VerificationCode from "./VerificationCode";
@@ -17,7 +16,7 @@ const RegisterModal: FC<RegisterProps> = ({ setRegisterMode, registerMode }) => 
 	const [name, setName] = useState("");
 	const [nickname, _setNickname] = useState("nickname");
 	const [registrationComplete, setRegistrationComplete] = useState(false);
-	const navigate = useNavigate();
+	const [error, setError] = useState<string | null>(null);
 
 	const handleAuth = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -32,20 +31,22 @@ const RegisterModal: FC<RegisterProps> = ({ setRegisterMode, registerMode }) => 
 				},
 			},
 		})
-			.then((data) => {
-				// eslint-disable-next-line no-console
-				console.log("Registro exitoso:", data);
+			.then(() => {
 				setRegistrationComplete(true);
-
-				// Puedes redirigir a otra página o mostrar un mensaje de éxito
 			})
-			.catch((error) => {
-				console.error("Error al registrar:", error);
+			.catch((error: Error) => {
+				setError(error.message);
 			});
 	};
 
 	const handleVerificationSuccess = () => {
-		console.log("Hacer login");
+		signIn({ username, password })
+			.then(() => {
+				window.location.reload();
+			})
+			.catch((error) => {
+				console.error("Error al iniciar sesión:", error);
+			});
 	};
 
 	return (
@@ -91,6 +92,7 @@ const RegisterModal: FC<RegisterProps> = ({ setRegisterMode, registerMode }) => 
 							value={name}
 							onChange={(e) => setName(e.target.value)}
 						/>
+						{error && <span className={styles.error}>{error}</span>}
 						<div className={styles.text}>
 							<span
 								onClick={() => {

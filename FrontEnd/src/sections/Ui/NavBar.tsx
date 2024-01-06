@@ -1,11 +1,11 @@
 import { useState } from "react";
 
+import { useUser } from "../../context/UserContext";
 import AuthForm from "../Login/AuthForm";
 import Button from "./Button";
 import ModalComponent from "./ModalComponent";
 import styles from "./NavBar.module.scss";
 import NavMobile from "./NavMobile";
-import { useUser } from "../../context/UserContext";
 
 const LINKS = ["Home", "About", "Contact"];
 

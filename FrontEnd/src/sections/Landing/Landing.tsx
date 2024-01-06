@@ -2,14 +2,15 @@ import { useState } from "react";
 import { Navigate } from "react-router-dom";
 
 import { useUser } from "../../context/UserContext";
-import LoginModal from "../Login/LoginModal";
+import AuthForm from "../Login/AuthForm";
 import Button from "../Ui/Button";
 import ModalComponent from "../Ui/ModalComponent";
 import styles from "./Landing.module.scss";
 import TierCard from "./TierCard";
 
 const Landing = () => {
-	const { user, signOut } = useUser();
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+	const { user } = useUser();
 	const [opened, setOpened] = useState(false);
 
 	if (user) {
@@ -91,7 +92,7 @@ const Landing = () => {
 			</div>
 
 			<ModalComponent opened={opened} setOpened={setOpened}>
-				<LoginModal />
+				<AuthForm />
 			</ModalComponent>
 		</>
 	);
