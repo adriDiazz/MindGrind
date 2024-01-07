@@ -17,7 +17,7 @@ type userType = {
 };
 
 interface UserContextValue {
-	user: userType | null; // Cambia 'any' por el tipo adecuado para tu objeto de usuario
+	user: userType | null;
 	signOut: () => void;
 	setUser: React.Dispatch<React.SetStateAction<userType | null>>;
 }

@@ -1,0 +1,112 @@
+.wrapper {
+	display: flex;
+	.rightMenuWrapper {
+		background-color: var(--white);
+		width: 17rem;
+		height: 100vh;
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-start;
+		align-items: flex-start;
+
+		.profileWrapper {
+			display: flex;
+			justify-content: flex-start;
+			align-items: center;
+			padding: 1rem;
+			gap: 1rem;
+
+			img {
+				width: 3rem;
+				height: 3rem;
+				border-radius: 50%;
+			}
+
+			span {
+				font-family: "MazzardR";
+				font-size: 1rem;
+				font-weight: 400;
+				color: var(--black);
+			}
+		}
+
+		.sectionsWrapper {
+			margin-top: 2rem;
+			width: 80%;
+			height: 50%;
+			padding: 1rem;
+			.section {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				gap: 1rem;
+				margin-bottom: 1rem;
+				cursor: pointer;
+				padding: 0.5rem;
+				border-radius: 5px;
+
+				.left {
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					gap: 1rem;
+				}
+
+				span {
+					font-family: "MazzardR";
+					font-size: 1rem;
+					font-weight: 400;
+					color: var(--black);
+				}
+
+				&:hover {
+					background-color: #d9d9d9;
+				}
+			}
+		}
+
+		.moreMin {
+			background-color: #d9d9d9;
+			width: 70%;
+			margin: 1rem;
+			padding: 1rem;
+			border-radius: 5px;
+
+			display: flex;
+			justify-content: space-around;
+			align-items: flex-end;
+			gap: 1rem;
+
+			span {
+				font-family: "MazzardR";
+				font-size: 1rem;
+				font-weight: 400;
+				color: var(--black);
+			}
+		}
+
+		.btn {
+			padding: 0.5rem 2.4rem;
+			background-color: var(--purple);
+			color: var(--white);
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			vertical-align: middle;
+			white-space: nowrap;
+			user-select: none;
+			font-family: "MazzardR";
+			margin: 1rem;
+			width: 82%;
+
+			&:hover {
+				background-color: #6a67fd;
+			}
+		}
+	}
+}
+
+.leftWrapper {
+	background-color: #6a67fd;
+	width: 100%;
+}
