@@ -26,8 +26,18 @@ const rows = [
 
 export default function LastNotesTable() {
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+    <TableContainer
+      component={Paper}
+      sx={{
+        width: "90%",
+      }}
+    >
+      <Table
+        sx={{
+          width: "100%",
+        }}
+        aria-label="simple table"
+      >
         <TableHead>
           <TableRow>
             <TableCell>Dessert (100g serving)</TableCell>
