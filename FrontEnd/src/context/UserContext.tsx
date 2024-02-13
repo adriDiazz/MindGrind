@@ -7,7 +7,7 @@ interface UserContextProps {
 	children: ReactNode;
 }
 
-type userType = {
+export type userType = {
 	signInDetails: {
 		loginId: string;
 		authFlowType: string;

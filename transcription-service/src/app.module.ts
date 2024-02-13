@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
+import { MongooseModule } from '@nestjs/mongoose';
+import TranscriptionModule from './Transcription/transcription.module';
 
 @Module({
   imports: [
@@ -9,8 +9,12 @@ import { ConfigModule } from '@nestjs/config';
       envFilePath: '.env',
       isGlobal: true,
     }),
+    MongooseModule.forRoot(
+      `mongodb+srv://adriandiazmanzanares9:${process.env.MONGO_PASS}@mindgrind.ljuvwzf.mongodb.net/MindGrind`,
+    ),
+    TranscriptionModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
