@@ -35,11 +35,10 @@ const VideoCard: FC<User> = ({ user, setOpened, setData, opened, data }) => {
 	};
 
 	// eslint-disable-next-line no-console
-	console.log(data);
 
 	const handleCreateButton = () => {
 		setOpened(true);
-		fetch(`${String(import.meta.env.VITE_API_TRANSCRIPTION_URL)}${viderId}`, {
+		fetch(`${String(import.meta.env.VITE_API_TRANSCRIPTION)}${viderId}`, {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
@@ -75,7 +74,7 @@ const VideoCard: FC<User> = ({ user, setOpened, setData, opened, data }) => {
 			</div>
 			<LastNotesTable />
 			<ModalComponent opened={opened} setOpened={setOpened}>
-				<ResumeModal loading={loading} data={data} videoId={viderId} />
+				<ResumeModal loading={loading} data={data} videoId={viderId} setLoading={setLoading} />
 			</ModalComponent>
 		</div>
 	);

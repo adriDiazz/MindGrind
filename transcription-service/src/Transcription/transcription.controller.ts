@@ -4,8 +4,6 @@ import {
   Get,
   Param,
   Post,
-  Query,
-  Res,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -27,9 +25,19 @@ export class TranscriptionController {
     return { chatGptNotes };
   }
 
+  @Get('resume/:videoId')
+  async fetchResume(@Param('videoId') videoId: string) {
+    const chatGptNotes =
+      await this.TranscriptionService.fetchTranscript(videoId);
+    return { chatGptNotes };
+  }
+
   @Post('save-note')
-  async saveNote(@Query('userId') userId: string, @Body('note') note: string) {
-    const savedNote = await this.TranscriptionService.saveNotes(note, userId);
+  async saveNote(@Body() body: { userId: string; note: string }) {
+    const savedNote = await this.TranscriptionService.saveNotes(
+      body.note,
+      body.userId,
+    );
     return savedNote;
   }
 

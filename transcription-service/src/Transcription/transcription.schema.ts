@@ -3,16 +3,21 @@ import { HydratedDocument } from 'mongoose';
 
 export type NoteSchema = HydratedDocument<Note>;
 
-@Schema()
+export interface NoteType {
+  note: string;
+  noteId: string;
+}
+
+@Schema({ timestamps: true }) // Habilita las marcas de tiempo automáticas
 export class Note {
   @Prop()
   userId: string;
 
   @Prop()
-  note: string;
+  notes: [NoteType];
 
   @Prop()
-  date: Date;
+  isDirectory: boolean;
 }
 
 export const NoteSchema = SchemaFactory.createForClass(Note);

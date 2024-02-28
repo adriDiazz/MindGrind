@@ -29,6 +29,16 @@
     src: url("fonts/CabinetGrotesk-Medium.otf");
 }
 
+._rootContentEditableWrapper_11eqz_1047 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+._contentEditable_11eqz_352 {
+    width: 80%;
+}
+
 .lds-ring {
     display: inline-block;
     position: relative;

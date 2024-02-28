@@ -7,6 +7,7 @@ import { Model } from 'mongoose';
 import { Note } from './transcription.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import NoteDto from './Dto/NOTE.dto';
+import { randomUUID } from 'crypto';
 
 @Injectable()
 export class TranscriptionService {
@@ -14,6 +15,7 @@ export class TranscriptionService {
 
   async fetchTranscript(videoId: string): Promise<string> {
     try {
+      console.log('Fetching transcript for video:', videoId);
       const transcript = await YoutubeTranscript.fetchTranscript(videoId);
       const fullText = transcript.map((line) => line.text).join(' ');
       return fullText;
@@ -103,10 +105,15 @@ export class TranscriptionService {
       if (!user) {
         throw new Error('Invalid user data');
       }
-
       const noteData = new NoteDto();
       noteData.userId = user;
-      noteData.note = chatGptNotes;
+      noteData.notes = [
+        {
+          note: chatGptNotes,
+          noteId: randomUUID(),
+        },
+      ];
+      noteData.isDirectory = false;
 
       const newNote = new this._noteModel(noteData);
       return newNote.save();
