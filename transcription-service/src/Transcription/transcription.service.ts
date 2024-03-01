@@ -3,10 +3,9 @@ import OpenAI from 'openai';
 import { YoutubeTranscript } from 'youtube-transcript';
 import { countTextWords } from '../utils/utils';
 import { Readable } from 'stream';
-import { Model } from 'mongoose';
+import { Model, now } from 'mongoose';
 import { Note } from './transcription.schema';
 import { InjectModel } from '@nestjs/mongoose';
-import NoteDto from './Dto/NOTE.dto';
 import { randomUUID } from 'crypto';
 
 @Injectable()
@@ -105,21 +104,32 @@ export class TranscriptionService {
       if (!user) {
         throw new Error('Invalid user data');
       }
-      const noteData = new NoteDto();
-      noteData.userId = user;
-      noteData.notes = [
-        {
+      const userData = await this._noteModel.findOne({ userId: user });
+      if (userData) {
+        userData.notes.push({
           note: chatGptNotes,
           noteId: randomUUID(),
-          createdAt: new Date(),
-          updatedAt: new Date(),
+          createdAt: now(),
+          updatedAt: now(),
           title: 'Untitled document',
-        },
-      ];
-      noteData.isDirectory = false;
-
-      const newNote = new this._noteModel(noteData);
-      return newNote.save();
+        });
+        return userData.save();
+      } else {
+        const newNote = new this._noteModel({
+          userId: user,
+          notes: [
+            {
+              note: chatGptNotes,
+              noteId: randomUUID(),
+              createdAt: now(),
+              updatedAt: now(),
+              title: 'Untitled document',
+            },
+          ],
+          isDirectory: false,
+        });
+        return newNote.save();
+      }
     } catch (error) {
       console.error('Error saving note:', error);
       throw new Error('Error saving note');

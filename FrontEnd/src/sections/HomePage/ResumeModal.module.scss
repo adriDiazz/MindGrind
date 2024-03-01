@@ -44,3 +44,16 @@
     bottom: 0;
     right: 1rem;
 }
+
+//media queries for laptop
+@media (min-width: 1024px) {
+    .wrapper {
+    height: 70vh;
+    width: 90vw;
+    display: flex;
+    font-family: 'MazzardR';
+    padding: 2rem;
+    color: rgb(58, 56, 56);
+    position: relative;
+}
+}
