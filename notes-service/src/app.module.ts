@@ -4,9 +4,11 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Note } from './modules/note/entities/note.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { NoteModule } from './modules/note/note.module';
 
 @Module({
   imports: [
+    NoteModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
