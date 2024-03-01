@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Note, NoteType } from '../../entities/note.entity';
 import { Repository } from 'typeorm';
-import { IBaseRepository } from 'src/modules/shared/base.repository';
+import { IBaseRepository } from 'src/modules/IRepositories/base.repository';
 
 @Injectable()
 export class NoteRepositoryService implements IBaseRepository<Note> {

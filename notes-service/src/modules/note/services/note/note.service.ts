@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { NoteRepositoryService } from '../../repository/note-repository/note-repository.service';
+import { INoteRepository } from 'src/modules/IServices/note.interface';
 
 @Injectable()
-export class NoteService {
+export class NoteService implements INoteRepository {
   constructor(private readonly noteRepository: NoteRepositoryService) {}
 
   getNotes(userId: string) {

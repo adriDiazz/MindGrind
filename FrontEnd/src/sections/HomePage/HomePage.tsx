@@ -3,7 +3,7 @@ import { Navigate } from "react-router-dom";
 
 import { useUser } from "../../context/UserContext";
 import styles from "./HomePage.module.scss";
-import RightMenu from "./RightMenu";
+import LeftMenu from "./RightMenu";
 import VideoCard from "./VideoCard";
 
 export interface ResponseApi {
@@ -22,7 +22,7 @@ const HomePage = () => {
 
 	return (
 		<div className={styles.wrapper}>
-			<RightMenu user={user} />
+			<LeftMenu user={user} />
 			<VideoCard user={user} setOpened={setOpened} setData={setData} opened={opened} data={data} />
 		</div>
 	);

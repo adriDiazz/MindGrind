@@ -24,4 +24,7 @@ export class Note {
 export interface NoteType {
   note: string;
   noteId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  title: string;
 }

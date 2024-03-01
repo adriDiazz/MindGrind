@@ -6,6 +6,9 @@ export type NoteSchema = HydratedDocument<Note>;
 export interface NoteType {
   note: string;
   noteId: string;
+  updatedAt: Date;
+  createdAt: Date;
+  title: string;
 }
 
 @Schema({ timestamps: true }) // Habilita las marcas de tiempo automáticas

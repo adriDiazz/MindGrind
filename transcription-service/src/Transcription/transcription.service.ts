@@ -111,6 +111,9 @@ export class TranscriptionService {
         {
           note: chatGptNotes,
           noteId: randomUUID(),
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          title: 'Untitled document',
         },
       ];
       noteData.isDirectory = false;

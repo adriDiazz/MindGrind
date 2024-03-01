@@ -9,9 +9,4 @@ export class NoteController {
   getNotes(@Param('userId') userId: string) {
     return this.noteService.getNotes(userId);
   }
-
-  @Get()
-  hola() {
-    return 'hola mundo';
-  }
 }

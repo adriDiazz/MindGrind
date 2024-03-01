@@ -1,4 +1,5 @@
 import { FC } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { userType } from "../../context/UserContext";
 import styles from "./HomePage.module.scss";
@@ -7,7 +8,9 @@ interface User {
 	user: userType | null;
 }
 
-const RightMenu: FC<User> = ({ user }) => {
+const LeftMenu: FC<User> = ({ user }) => {
+	const navigate = useNavigate();
+
 	return (
 		<div className={styles.rightMenuWrapper}>
 			<div className={styles.profileWrapper}>
@@ -15,14 +18,24 @@ const RightMenu: FC<User> = ({ user }) => {
 				<span>{user?.username}</span>
 			</div>
 			<div className={styles.sectionsWrapper}>
-				<div className={styles.section}>
+				<div
+					className={styles.section}
+					onClick={() => {
+						navigate("/home");
+					}}
+				>
 					<div className={styles.left}>
 						<img src="/home.png" alt="home" />
 						<span>Home</span>
 					</div>
 					<img src="/arrow.png" alt="" />
 				</div>
-				<div className={styles.section}>
+				<div
+					className={styles.section}
+					onClick={() => {
+						navigate("/notes");
+					}}
+				>
 					<div className={styles.left}>
 						<img src="/notes.png" alt="home" />
 						<span>Notes</span>
@@ -39,4 +52,4 @@ const RightMenu: FC<User> = ({ user }) => {
 	);
 };
 
-export default RightMenu;
+export default LeftMenu;
