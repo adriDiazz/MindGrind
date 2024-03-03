@@ -1,5 +1,7 @@
 import { FC, useEffect, useState } from "react";
 
+import CrossIcon from "../Ui/Icons/CrossIcon";
+import SendIcon from "../Ui/Icons/SendIcon";
 import styles from "./Chat.module.scss";
 
 interface ChatMessageProps {
@@ -28,7 +30,7 @@ const ChatMessage: FC<ChatMessageProps> = ({ activeChat, setActiveChat }) => {
 			<div className={styles.chatHeader}>
 				<h2>GPT Chat</h2>
 				<button onClick={() => setActiveChat(false)}>
-					<img src="./crossIcon.png" alt="" />
+					<CrossIcon />
 				</button>
 			</div>
 			<div className={styles.chatContent}>
@@ -41,7 +43,7 @@ const ChatMessage: FC<ChatMessageProps> = ({ activeChat, setActiveChat }) => {
 			<div className={styles.chatFooter}>
 				<input type="text" placeholder="Type a message" />
 				<button>
-					<img src="./sendIcon.png" alt="" />
+					<SendIcon />
 				</button>
 			</div>
 		</div>

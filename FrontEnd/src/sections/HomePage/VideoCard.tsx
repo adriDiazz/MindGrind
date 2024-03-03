@@ -1,6 +1,7 @@
 import { FC, useState } from "react";
 
 import { userType } from "../../context/UserContext";
+import CustomUploadIcon from "../Ui/Icons/CustomUploadIcon";
 import ModalComponent from "../Ui/ModalComponent";
 import { ResponseApi } from "./HomePage";
 import styles from "./HomePage.module.scss";
@@ -70,7 +71,7 @@ const VideoCard: FC<User> = ({ user, setOpened, setData, opened, data }) => {
 					onChange={handleVideoLink}
 				/>
 				<button onClick={handleCreateButton}>Create</button>
-				<img src="/customUpload.png" alt="" />
+				<CustomUploadIcon />
 			</div>
 			<LastNotesTable />
 			<ModalComponent opened={opened} setOpened={setOpened}>

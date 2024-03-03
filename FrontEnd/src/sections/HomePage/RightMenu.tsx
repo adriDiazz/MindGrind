@@ -2,6 +2,9 @@ import { FC } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { userType } from "../../context/UserContext";
+import ArrowIcon from "../Ui/Icons/ArrowIcon";
+import HomeIcon from "../Ui/Icons/HomeIcon";
+import NotesIcon from "../Ui/Icons/NotesIcon";
 import styles from "./HomePage.module.scss";
 
 interface User {
@@ -25,10 +28,10 @@ const LeftMenu: FC<User> = ({ user }) => {
 					}}
 				>
 					<div className={styles.left}>
-						<img src="/home.png" alt="home" />
+						<HomeIcon />
 						<span>Home</span>
 					</div>
-					<img src="/arrow.png" alt="" />
+					<ArrowIcon />
 				</div>
 				<div
 					className={styles.section}
@@ -37,7 +40,7 @@ const LeftMenu: FC<User> = ({ user }) => {
 					}}
 				>
 					<div className={styles.left}>
-						<img src="/notes.png" alt="home" />
+						<NotesIcon />
 						<span>Notes</span>
 					</div>
 					<img src="/arrow.png" alt="" />

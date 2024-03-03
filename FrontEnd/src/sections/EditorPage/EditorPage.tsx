@@ -35,20 +35,11 @@ import {
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
+import { userType } from "../../context/UserContext";
 import Chat from "./Chat";
-import { userType, useUser } from "../../context/UserContext";
 
 
-const defaultSnippetContent = `
-export default function App() {
-  return (
-    <div className="App">
-      <h1>Hello CodeSandbox</h1>
-      <h2>Start editing to see some magic happen!</h2>
-    </div>
-  );
-}
-`.trim();
+
 
 const simpleSandpackConfig: import("@mdxeditor/editor").SandpackConfig = {
 	defaultPreset: "react",
@@ -61,7 +52,6 @@ const simpleSandpackConfig: import("@mdxeditor/editor").SandpackConfig = {
 			sandpackTheme: "light",
 			snippetFileName: "/App.js",
 			snippetLanguage: "jsx",
-			initialSnippetContent: defaultSnippetContent,
 		},
 	],
 };
@@ -73,7 +63,7 @@ export default function EditorPage() {
     chatGptNotes: string;
   }, user: userType } };
   const { data, user } = state; 
- 
+   
 	useEffect(() => {
 		const editorDiv = document.querySelector<HTMLDivElement>("._contentEditable_11eqz_352");
 		if (editorDiv && activeChat) {

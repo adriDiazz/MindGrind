@@ -16,7 +16,11 @@ export function App() {
 					<Route path="/" element={<Landing />} />
 					<Route path="/home" element={<HomePage />} />
 					<Route path="/editor" element={<EditorPage />} />
-					<Route path="/notes" element={<NotesPage />} />
+					<Route path="/notes">
+						<Route path="" element={<NotesPage />} />
+						<Route path=":noteId" element={<EditorPage />} />
+					</Route>
+
 					<Route path="*" element={<h2>404</h2>} />
 				</Routes>
 			</UserProvider>

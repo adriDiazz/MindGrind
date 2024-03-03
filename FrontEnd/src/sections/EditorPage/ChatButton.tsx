@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { FC } from "react";
 
+import ChatIcon from "../Ui/Icons/ChatIcon";
 import styles from "./Chat.module.scss";
 
 interface ChatMessageProps {
@@ -17,7 +18,8 @@ const ChatButton: FC<ChatMessageProps> = ({ setActiveChat }) => {
 						setActiveChat(true);
 					}}
 				>
-					<img src="./chatIcon.png" alt="" />
+					{/* <img src="./chatIcon.png" alt="" /> */}
+					<ChatIcon />
 				</button>
 			</motion.div>
 		</div>

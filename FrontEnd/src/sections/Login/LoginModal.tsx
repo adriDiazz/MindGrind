@@ -1,6 +1,7 @@
 import { signIn } from "aws-amplify/auth";
 import { FC, useState } from "react";
 
+import GoogleIcon from "../Ui/Icons/GoogleIcon";
 import styles from "./LoginModal.module.scss";
 
 interface LoginProps {
@@ -64,7 +65,7 @@ const LoginModal: FC<LoginProps> = ({ setRegisterMode, registerMode }) => {
 						Sign in
 					</button>
 					<button className={styles.buttonGoogle}>
-						<img src="/google.png" alt="google.png" />
+						<GoogleIcon />
 						Sign in with Google
 					</button>
 				</div>
