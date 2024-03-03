@@ -27,4 +27,5 @@ export interface NoteType {
   createdAt: Date;
   updatedAt: Date;
   title: string;
+  category: string;
 }

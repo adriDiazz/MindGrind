@@ -20,6 +20,9 @@ const LeftMenu: FC<User> = ({ user }) => {
 				<img src="/profile.png" alt="defaultProfileImage" />
 				<span>{user?.username}</span>
 			</div>
+
+			{/* <div className={styles.lineSeparator}></div> */}
+
 			<div className={styles.sectionsWrapper}>
 				<div
 					className={styles.section}
@@ -43,7 +46,7 @@ const LeftMenu: FC<User> = ({ user }) => {
 						<NotesIcon />
 						<span>Notes</span>
 					</div>
-					<img src="/arrow.png" alt="" />
+					<ArrowIcon />
 				</div>
 			</div>
 			<div className={styles.moreMin}>

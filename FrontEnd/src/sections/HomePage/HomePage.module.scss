@@ -9,6 +9,12 @@
     justify-content: flex-start;
     align-items: flex-start;
 
+    .lineSeparator {
+      width: 100%;
+      height: 0.1rem;
+      background-color: #d9d9d9;
+    }
+
     .profileWrapper {
       display: flex;
       justify-content: flex-start;
@@ -108,11 +114,13 @@
 
 .leftWrapper {
   width: 100%;
+  height: 91vh;
   display: flex;
   justify-content: flex-start;
   align-items: center;
   flex-direction: column;
   gap: 4rem;
+  overflow-y: scroll;
   
 
   .videoWrapper {
@@ -160,7 +168,7 @@
       margin-bottom: 1.4rem;
     }
 
-    img {
+    svg {
       position: absolute;
       top: 0;
       right: 0;

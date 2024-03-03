@@ -9,4 +9,9 @@ export class NoteController {
   getNotes(@Param('userId') userId: string) {
     return this.noteService.getNotes(userId);
   }
+
+  @Get('last/:userId')
+  getLastModifiedNotes(@Param('userId') userId: string) {
+    return this.noteService.getLastModifiedNotes(userId);
+  }
 }

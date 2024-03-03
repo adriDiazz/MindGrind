@@ -12,6 +12,10 @@ interface NoteProps {
 const NoteElement: FC<NoteProps> = ({ note }) => {
 	const navigate = useNavigate();
 	const { user } = useUser();
+	const fecha = new Date(note.createdAt);
+	const dia = fecha.getDate();
+	const mes = fecha.getMonth() + 1;
+	const año = fecha.getFullYear();
 
 	return (
 		<div
@@ -25,10 +29,7 @@ const NoteElement: FC<NoteProps> = ({ note }) => {
 			<img src="MockPreview.png" alt="" />
 			<div className={styles.bottom}>
 				<span>{note.title}</span>
-				<span className={styles.date}>
-					{new Date(note.createdAt).getDay()}/{new Date(note.createdAt).getMonth()}/
-					{new Date(note.createdAt).getFullYear()}
-				</span>
+				<span className={styles.date}>{`${dia}/${mes}/${año}`}</span>
 			</div>
 		</div>
 	);

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -5,20 +6,25 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import { useEffect, useState } from "react";
 
-function createData(name: string, calories: number, fat: number, carbs: number, protein: number) {
-	return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-	createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-	createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-	createData("Eclair", 262, 16.0, 24, 6.0),
-	createData("Cupcake", 305, 3.7, 67, 4.3),
-	createData("Gingerbread", 356, 16.0, 49, 3.9),
-];
+import { useUser } from "../../context/UserContext";
+import { getLastModifiedNotes } from "../../services/NotesService";
+import { Note } from "../../types/types";
+import FolderTableIcon from "../Ui/Icons/FolderTableIcon";
 
 export default function LastNotesTable() {
+	const [data, setData] = useState<Note[]>([]);
+	const { user } = useUser();
+
+	useEffect(() => {
+		if (user) {
+			void getLastModifiedNotes(user.userId).then((res) => {
+				setData(res);
+			});
+		}
+	}, [user]);
+
 	return (
 		<TableContainer
 			component={Paper}
@@ -34,23 +40,23 @@ export default function LastNotesTable() {
 			>
 				<TableHead>
 					<TableRow>
-						<TableCell>Dessert (100g serving)</TableCell>
-						<TableCell align="right">Calories</TableCell>
-						<TableCell align="right">Fat&nbsp;(g)</TableCell>
-						<TableCell align="right">Carbs&nbsp;(g)</TableCell>
-						<TableCell align="right">Protein&nbsp;(g)</TableCell>
+						<TableCell></TableCell>
+						<TableCell>Document</TableCell>
+						<TableCell align="right">Category</TableCell>
+						<TableCell align="right">Last Modfied</TableCell>
 					</TableRow>
 				</TableHead>
 				<TableBody>
-					{rows.map((row) => (
-						<TableRow key={row.name} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
+					{data.map((row) => (
+						<TableRow key={row.noteId} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
 							<TableCell component="th" scope="row">
-								{row.name}
+								<FolderTableIcon />
 							</TableCell>
-							<TableCell align="right">{row.calories}</TableCell>
-							<TableCell align="right">{row.fat}</TableCell>
-							<TableCell align="right">{row.carbs}</TableCell>
-							<TableCell align="right">{row.protein}</TableCell>
+							<TableCell component="th" scope="row">
+								{row.title}
+							</TableCell>
+							<TableCell align="right">{row.category ?? "General"}</TableCell>
+							<TableCell align="right">{new Date(row.updatedAt).toLocaleDateString()}</TableCell>
 						</TableRow>
 					))}
 				</TableBody>

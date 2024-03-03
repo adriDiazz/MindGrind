@@ -59,7 +59,23 @@ export class TranscriptionService {
   }
 
   async getNotesFake(transcription: string): Promise<string> {
-    return `Here are the notes for the transcription: ${transcription}`;
+    return `# Resumen de la historia de la monarquía española
+
+- **Introducción:**
+  - Hoy en Memorias de Pezos vamos a hacer un breve repaso de la historia de la monarquía española.
+  - Si quieren saber más, tenemos un vídeo en nuestro canal donde resumimos la historia de España desde el Paleolítico hasta el siglo XXI.
+  - En el vídeo de hoy nos centraremos específicamente en la monarquía española, en los reyes y en sus sitios más destacables para bien y para mal.
+
+- **Formación de España:**
+  - El concepto de España es complejo y su formación no ocurrió de manera instantánea ni en un momento específico, sino que fue un proceso gradual y complicado a lo largo de varios siglos.
+  - Utilizaremos como punto de partida el matrimonio de Isabel I de Castilla con Fernando II de Aragón, más conocidos como los Reyes Católicos.
+  - Este enlace significó la unificación de los territorios de Castilla y Aragón, sentando las bases para la creación de la monarquía española en la Península Ibérica.
+  - También estaban los reinos de Navarra, que se anexionó a Castilla en 1512, Portugal y el último bastión musulmán, el reino nazarí de Granada, que fue conquistado en 1492, marcando el fin de ocho siglos de reconquista.
+
+- **Reinado de los Reyes Católicos:**
+  - En el mismo año de la toma de Granada, en 1492, Cristóbal Colón descubrió América pensando que había hallado un nuevo camino hacia las Indias o Asia por el oeste.
+  - Otros eventos importantes de su reinado incluyen la expulsión de los judíos y la implantación de...
+`;
   }
 
   async getChatGptNotes(transcription: string): Promise<any> {
@@ -112,6 +128,7 @@ export class TranscriptionService {
           createdAt: now(),
           updatedAt: now(),
           title: 'Untitled document',
+          category: 'General',
         });
         return userData.save();
       } else {

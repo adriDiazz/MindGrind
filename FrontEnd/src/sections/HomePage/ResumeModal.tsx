@@ -2,6 +2,7 @@ import { FC } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useUser } from "../../context/UserContext";
+import { createNote } from "../../services/NotesService";
 import Loader from "../Ui/Loader";
 import { ResponseApi } from "./HomePage";
 import style from "./ResumeModal.module.scss";
@@ -19,29 +20,10 @@ const ResumeModal: FC<ResumeModalProps> = ({ loading, videoId, data, setLoading 
 	const { user } = useUser();
 
 	const handleCreateButton = () => {
-		fetch(`${String(import.meta.env.VITE_API_SAVE)}`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({
-				note: data?.chatGptNotes,
-				userId: user?.userId,
-			}),
-		})
-			.then((res) => {
-				if (res.ok) {
-					return res.json();
-				}
-			})
-			.then((data) => {
-				// eslint-disable-next-line no-console
-				console.log(data);
-			})
-			.catch((error) => {
-				// eslint-disable-next-line no-console
-				console.log(error);
-			});
+		void createNote({
+			data,
+			user,
+		});
 	};
 
 	return (

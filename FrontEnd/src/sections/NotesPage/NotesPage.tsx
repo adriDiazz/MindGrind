@@ -5,12 +5,14 @@ import { useUser } from "../../context/UserContext";
 import { NoteResponse } from "../../types/types";
 import styles from "../HomePage/HomePage.module.scss";
 import LeftMenu from "../HomePage/RightMenu";
+import Loader from "../Ui/Loader";
 import NotesList from "./NotesList";
 
 const NotesPage = () => {
 	const { user } = useUser();
 	const navigate = useNavigate();
 	const [notes, setNotes] = useState<NoteResponse>({} as NoteResponse);
+	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
 		const fetchNotes = async () => {
@@ -24,6 +26,7 @@ const NotesPage = () => {
 					}
 					const data = (await response.json()) as NoteResponse;
 					setNotes(data);
+					setLoading(false);
 				}
 			} catch (error) {
 				console.error("Error fetching notes:", error);
@@ -40,7 +43,7 @@ const NotesPage = () => {
 	return (
 		<div className={styles.wrapper}>
 			<LeftMenu user={user} />
-			<NotesList note={notes} />
+			{!loading ? <NotesList note={notes} /> : <Loader />}
 		</div>
 	);
 };
