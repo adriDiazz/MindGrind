@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { NoteRepositoryService } from '../../repository/note-repository/note-repository.service';
 import { INoteRepository } from 'src/modules/IServices/note.interface';
 import { NoteType } from '../../entities/note.entity';
+import { UpdateNoteDto } from '../../dto/updateNoteDto';
 
 @Injectable()
 export class NoteService implements INoteRepository {
@@ -27,5 +28,26 @@ export class NoteService implements INoteRepository {
     });
 
     return lastModifiedNote;
+  }
+
+  async updateNote(note: UpdateNoteDto) {
+    try {
+      const userData = await this.noteRepository.getNotes(note.userId);
+      const noteToUpdateIndex = userData.notes.findIndex((userNote) => {
+        return userNote.noteId === note.note.note.noteId;
+      });
+
+      if (noteToUpdateIndex === -1 || !userData) {
+        return null;
+      }
+
+      userData.notes[noteToUpdateIndex] = note.note.note;
+
+      return this.noteRepository.updateNote(userData);
+    } catch (error) {
+      // Handle the error here
+      console.error(error);
+      throw error;
+    }
   }
 }

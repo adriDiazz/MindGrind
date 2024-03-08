@@ -12,10 +12,13 @@ export interface Note {
 }
 
 export interface NoteResponse {
-	userId: string;
-	notes: Note[];
-	createdAt: Date;
-	updatedAt: Date;
+	noteId: string;
+	data: {
+		userId: string;
+		notes: Note[];
+		createdAt: Date;
+		updatedAt: Date;
+	};
 }
 
 export interface CreateNoteType {

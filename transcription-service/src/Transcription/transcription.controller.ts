@@ -38,6 +38,7 @@ export class TranscriptionController {
       body.note,
       body.userId,
     );
+    console.log('savedNote', savedNote);
     return savedNote;
   }
 

@@ -1,8 +1,9 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useUser } from "../../context/UserContext";
 import { createNote } from "../../services/NotesService";
+import { NoteResponse } from "../../types/types";
 import Loader from "../Ui/Loader";
 import { ResponseApi } from "./HomePage";
 import style from "./ResumeModal.module.scss";
@@ -18,12 +19,20 @@ const ResumeModal: FC<ResumeModalProps> = ({ loading, videoId, data, setLoading 
 	const notesShort = data?.chatGptNotes.slice(0, 2000);
 	const navigate = useNavigate();
 	const { user } = useUser();
+	const [response, setResponse] = useState<NoteResponse>();
 
 	const handleCreateButton = () => {
-		void createNote({
+		createNote({
 			data,
 			user,
-		});
+		})
+			.then((response) => {
+				navigate("/editor", { state: { data: response, user } });
+			})
+			.catch((error) => {
+				// eslint-disable-next-line no-console
+				console.log(error);
+			});
 	};
 
 	return (
@@ -50,7 +59,6 @@ const ResumeModal: FC<ResumeModalProps> = ({ loading, videoId, data, setLoading 
 								className={style.btnCreate}
 								onClick={() => {
 									handleCreateButton();
-									navigate("/editor", { state: { data, user } });
 								}}
 							>
 								Create Notes

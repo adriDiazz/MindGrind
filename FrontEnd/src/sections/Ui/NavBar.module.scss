@@ -48,6 +48,37 @@
 	}
 }
 
+.noteWrapper {
+	width: 68%;
+
+	.bottom {
+		display: flex;
+		justify-content: start;
+		align-items: center;
+		gap: 1rem;
+	}
+	.bottom span {
+		color: #928b8b;
+	}
+
+	input {
+		color: #928b8b;
+	}
+
+	.editIcon {
+		cursor: pointer;
+		transition: all 0.3s ease-in-out;
+
+		&:hover {
+			transform: scale(1.1);
+		}
+	}
+
+	svg {
+		width: 20px;
+	}
+}
+
 @media (min-width: 320px) and (max-width: 767px) {
 	.wrapper {
 		font-family: "CabinetBold";

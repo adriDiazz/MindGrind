@@ -1,8 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ObjectId } from 'typeorm';
 
 @Entity({ name: 'notes' })
 export class Note {
   @PrimaryGeneratedColumn()
+  _id: ObjectId;
+
+  @Column()
   id: number;
 
   @Column()

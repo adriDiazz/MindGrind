@@ -81,7 +81,6 @@ export class TranscriptionService {
   async getChatGptNotes(transcription: string): Promise<any> {
     try {
       const transcriptionLenght = countTextWords(transcription);
-      console.log('transcriptionLenght', transcriptionLenght);
 
       if (transcriptionLenght > 1000) {
         transcription = transcription.slice(0, 1000);
@@ -130,14 +129,19 @@ export class TranscriptionService {
           title: 'Untitled document',
           category: 'General',
         });
-        return userData.save();
+        const data = await userData.save();
+        return {
+          noteId: userData.notes[userData.notes.length - 1].noteId,
+          data,
+        };
       } else {
+        const noteRandomId = randomUUID();
         const newNote = new this._noteModel({
           userId: user,
           notes: [
             {
               note: chatGptNotes,
-              noteId: randomUUID(),
+              noteId: noteRandomId,
               createdAt: now(),
               updatedAt: now(),
               title: 'Untitled document',
@@ -145,7 +149,9 @@ export class TranscriptionService {
           ],
           isDirectory: false,
         });
-        return newNote.save();
+        const data = await newNote.save();
+
+        return { noteId: noteRandomId, data };
       }
     } catch (error) {
       console.error('Error saving note:', error);

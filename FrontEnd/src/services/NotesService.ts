@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { CreateNoteType, Note, NoteResponse } from "../types/types";
 
 export const createNote = (note: CreateNoteType): Promise<void | NoteResponse> => {
@@ -37,6 +38,26 @@ export const getLastModifiedNotes = async (userId: string): Promise<Note[]> => {
 		const data = (await lastNotes.json()) as Note[];
 
 		return data;
+	} catch (error) {
+		// eslint-disable-next-line no-console
+		console.log(error);
+		throw error;
+	}
+};
+
+export const updateNote = (userId: string | undefined, note: Note): Promise<unknown> => {
+	try {
+		return fetch(`${String(import.meta.env.VITE_API_UPDATE)}${userId}`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({ note }),
+		}).then((res) => {
+			if (res.ok) {
+				return res.json();
+			}
+		});
 	} catch (error) {
 		// eslint-disable-next-line no-console
 		console.log(error);

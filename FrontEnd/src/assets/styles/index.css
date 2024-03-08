@@ -12,5 +12,10 @@ body {
 }
 
 ._contentEditable_11eqz_352 {
-    width: 80%;
+    width: 70%;
+    min-height: 100vh;
+}
+
+._editorRoot_11eqz_38{
+    min-width: 98vw;
 }

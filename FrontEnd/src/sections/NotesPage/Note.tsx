@@ -22,7 +22,7 @@ const NoteElement: FC<NoteProps> = ({ note }) => {
 			className={styles.wrapper}
 			onClick={() => {
 				navigate(`/notes/${note.noteId}`, {
-					state: { data: { chatGptNotes: note.note }, user },
+					state: { data: { data: note }, user },
 				});
 			}}
 		>
