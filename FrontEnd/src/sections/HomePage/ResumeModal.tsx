@@ -1,9 +1,10 @@
 import { FC, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { useSelectedNote } from "../../context/SelectedNoteContext";
 import { useUser } from "../../context/UserContext";
 import { createNote } from "../../services/NotesService";
-import { NoteResponse } from "../../types/types";
+import { Note, NoteResponse } from "../../types/types";
 import Loader from "../Ui/Loader";
 import { ResponseApi } from "./HomePage";
 import style from "./ResumeModal.module.scss";
@@ -19,6 +20,7 @@ const ResumeModal: FC<ResumeModalProps> = ({ loading, videoId, data, setLoading 
 	const notesShort = data?.chatGptNotes.slice(0, 2000);
 	const navigate = useNavigate();
 	const { user } = useUser();
+	const { setSelectedNote } = useSelectedNote();
 	const [response, setResponse] = useState<NoteResponse>();
 
 	const handleCreateButton = () => {
@@ -27,6 +29,10 @@ const ResumeModal: FC<ResumeModalProps> = ({ loading, videoId, data, setLoading 
 			user,
 		})
 			.then((response) => {
+				const currentNote = response.data?.notes?.find(
+					(note) => note.noteId === response.data.noteId
+				);
+				setSelectedNote(currentNote as Note);
 				navigate("/editor", { state: { data: response, user } });
 			})
 			.catch((error) => {

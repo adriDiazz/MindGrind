@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { useSelectedNote } from "../../context/SelectedNoteContext";
 import { useUser } from "../../context/UserContext";
 import { Note } from "../../types/types";
 import styles from "./Note.module.scss";
@@ -12,6 +13,7 @@ interface NoteProps {
 const NoteElement: FC<NoteProps> = ({ note }) => {
 	const navigate = useNavigate();
 	const { user } = useUser();
+	const { setSelectedNote } = useSelectedNote();
 	const fecha = new Date(note.createdAt);
 	const dia = fecha.getDate();
 	const mes = fecha.getMonth() + 1;
@@ -21,6 +23,7 @@ const NoteElement: FC<NoteProps> = ({ note }) => {
 		<div
 			className={styles.wrapper}
 			onClick={() => {
+				setSelectedNote(note);
 				navigate(`/notes/${note.noteId}`, {
 					state: { data: { data: note }, user },
 				});

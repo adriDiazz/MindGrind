@@ -41,6 +41,7 @@ import { userType } from "../../context/UserContext";
 import { Note, NoteResponse } from "../../types/types";
 import NavBar from "../Ui/NavBar";
 import Chat from "./Chat";
+import { useSelectedNote } from "../../context/SelectedNoteContext";
 
 
 
@@ -63,6 +64,7 @@ const simpleSandpackConfig: import("@mdxeditor/editor").SandpackConfig = {
 export default function EditorPage({ setIsEditorUrl }) {
   const [activeChat, setActiveChat] = useState(false);
   const [notes, setNotes] = useState("");
+  const { selectedNote } = useSelectedNote();
   const { state } = useLocation() as {
     state: { data: NoteResponse | Note; user: userType };
   };
@@ -80,6 +82,8 @@ export default function EditorPage({ setIsEditorUrl }) {
     currentNote = data as Note;
     currentText = currentNote?.data?.note;
   }
+
+  console.log(selectedNote);
 
   useEffect(() => {
     const editorDiv = document.querySelector<HTMLDivElement>(
@@ -121,7 +125,7 @@ export default function EditorPage({ setIsEditorUrl }) {
 
   return (
     <>
-      <NavBar note={currentNote} />
+      <NavBar note={selectedNote} />
       <div className="editor-container">
         <MDXEditor
           markdown={currentText || ""}

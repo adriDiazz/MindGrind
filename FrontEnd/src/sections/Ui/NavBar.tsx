@@ -4,6 +4,7 @@
 import { FC, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { useSelectedNote } from "../../context/SelectedNoteContext";
 import { useUser } from "../../context/UserContext";
 import { updateNote } from "../../services/NotesService";
 import { Note } from "../../types/types";
@@ -34,16 +35,19 @@ const NavBar: FC<props> = ({
 	const [opened, setOpened] = useState(false);
 	const [showMobileNav, setShowMobileNav] = useState(false);
 	const [editing, setEditing] = useState(false);
-	const [title, setTitle] = useState(note.data?.title as string);
+	const [title, setTitle] = useState(note.title);
 	const { user, signOut } = useUser();
+	const { setSelectedNote } = useSelectedNote();
 	const navigate = useNavigate();
 
 	const handleEdit = async () => {
 		if (editing) {
-			const newNote = { ...note?.data };
+			const newNote = { ...note };
 			newNote.title = title;
 			const response = await updateNote(user?.userId, newNote);
-			console.log(response);
+			if (response) {
+				setSelectedNote(newNote);
+			}
 			setEditing(false);
 		} else {
 			setEditing(true);
@@ -64,7 +68,7 @@ const NavBar: FC<props> = ({
 							{editing && (
 								<input type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
 							)}
-							{!editing && <span>{note.data?.title ?? note?.title}</span>}
+							{!editing && <span>{note?.title}</span>}
 							<div className={styles.editIcon} onClick={() => void handleEdit()}>
 								<EditIcon />
 							</div>
