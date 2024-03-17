@@ -3,10 +3,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Note } from './modules/note/entities/note.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { NoteModule } from './modules/note/note.module';
+import { ImageModule } from './modules/image/image.module';
 
 @Module({
   imports: [
     NoteModule,
+    ImageModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
