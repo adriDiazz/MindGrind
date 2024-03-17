@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Query } from '@nestjs/common';
 import { NoteService } from '../../services/note/note.service';
 import { NoteType } from '../../entities/note.entity';
 import { createUpdateNoteDto } from '../../dto/updateNoteDto';
@@ -21,5 +21,11 @@ export class NoteController {
   getNoteById(@Param('userId') userId: string, @Body('note') note: NoteType) {
     const dto = createUpdateNoteDto(note, userId);
     return this.noteService.updateNote(dto);
+  }
+
+  @Delete()
+  deleteNote(@Query('userId') userId: string, @Query('noteId') noteId: string) {
+    console.log(userId, noteId);
+    return this.noteService.deleteNote(userId, noteId);
   }
 }

@@ -57,6 +57,27 @@ export const updateNote = (userId: string | undefined, note: Note): Promise<unkn
 			if (res.ok) {
 				return res.json();
 			}
+			throw new Error("Error");
+		});
+	} catch (error) {
+		// eslint-disable-next-line no-console
+		console.log(error);
+		throw error;
+	}
+};
+
+export const deleteNote = (userId: string | undefined, noteId: string): Promise<unknown> => {
+	try {
+		return fetch(`${String(import.meta.env.VITE_API_DELETE)}userId=${userId}&noteId=${noteId}`, {
+			method: "DELETE",
+			headers: {
+				"Content-Type": "application/json",
+			},
+		}).then((res) => {
+			if (res.ok) {
+				return res.json();
+			}
+			throw new Error("Error");
 		});
 	} catch (error) {
 		// eslint-disable-next-line no-console

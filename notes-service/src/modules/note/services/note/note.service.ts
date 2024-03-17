@@ -50,4 +50,25 @@ export class NoteService implements INoteRepository {
       throw error;
     }
   }
+
+  async deleteNote(userId: string, noteId: string) {
+    try {
+      const userData = await this.noteRepository.getNotes(userId);
+      const noteToDeleteIndex = userData.notes.findIndex((userNote) => {
+        return userNote.noteId === noteId;
+      });
+
+      if (noteToDeleteIndex === -1 || !userData) {
+        return null;
+      }
+
+      userData.notes.splice(noteToDeleteIndex, 1);
+
+      return this.noteRepository.updateNote(userData);
+    } catch (error) {
+      // Handle the error here
+      console.error(error);
+      throw error;
+    }
+  }
 }

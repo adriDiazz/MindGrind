@@ -110,10 +110,10 @@ const NoteElement: FC<NoteProps> = ({ note }) => {
 				</div>
 			</div>
 			<ModalComponent opened={openedChange} setOpened={setOpenedChange}>
-				<ModalChangeTitle note={note} />
+				<ModalChangeTitle note={note} setOpenedChange={setOpenedChange} />
 			</ModalComponent>
 			<ModalComponent opened={openedDelete} setOpened={setOpenedDelete}>
-				<ModalDeleteNote />
+				<ModalDeleteNote note={note} setOpenedDelete={setOpenedDelete} />
 			</ModalComponent>
 		</div>
 	);
