@@ -1,12 +1,18 @@
 // src/aws/aws.service.ts
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import * as AWS from 'aws-sdk';
+import { Note } from 'src/modules/note/entities/note.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class AwsService {
   private s3: AWS.S3;
 
-  constructor() {
+  constructor(
+    @InjectRepository(Note)
+    private readonly noteRepository: Repository<Note>,
+  ) {
     this.s3 = new AWS.S3({
       accessKeyId: process.env.AWS_ACCESS_KEY_ID,
       secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
@@ -23,5 +29,15 @@ export class AwsService {
     return this.s3.upload(params).promise();
   }
 
-  async saveImageRecord(file: string) {}
+  async saveImageRecord(
+    file: AWS.S3.ManagedUpload.SendData,
+    userId: string,
+    noteId: string,
+  ) {
+    // save image record to database
+    const note = await this.noteRepository.findOne({ where: { userId } });
+    const noteIndex = note.notes.findIndex((note) => note.noteId === noteId);
+    note.notes[noteIndex].previewUrl = file.Location;
+    await this.noteRepository.update(note._id, note);
+  }
 }

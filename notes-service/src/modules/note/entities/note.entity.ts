@@ -31,4 +31,5 @@ export interface NoteType {
   updatedAt: Date;
   title: string;
   category: string;
+  previewUrl: string;
 }
