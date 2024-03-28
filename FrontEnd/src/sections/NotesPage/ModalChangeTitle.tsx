@@ -38,7 +38,14 @@ const ModalChangeTitle: FC<ModalChangeTitleProps> = ({ note, setOpenedChange }) 
 				onChange={(e) => setTitle(e.target.value)}
 			/>
 			<div className={styles.btnWrapper}>
-				<Button isWhite>Cancel</Button>
+				<Button
+					isWhite
+					onClick={() => {
+						setOpenedChange(false);
+					}}
+				>
+					Cancel
+				</Button>
 				<Button onClick={handelSave}>Save</Button>
 			</div>
 		</div>

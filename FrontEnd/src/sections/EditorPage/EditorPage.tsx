@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
 /* eslint-disable prettier/prettier */
@@ -26,6 +28,7 @@ import {
 	ListsToggle,
 	markdownShortcutPlugin,
 	MDXEditor,
+	MDXEditorMethods,
 	quotePlugin,
 	sandpackPlugin,
 	ShowSandpackInfo,
@@ -34,14 +37,18 @@ import {
 	toolbarPlugin,
 	UndoRedo,
 } from "@mdxeditor/editor";
-import { useEffect, useState } from "react";
+import html2canvas from "html2canvas";
+import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 
+import { useNotes } from "../../context/NoteContext";
+import { useSelectedNote } from "../../context/SelectedNoteContext";
 import { userType } from "../../context/UserContext";
+import useDebounce from "../../hooks/useDebounce";
+import { updateNote } from "../../services/NotesService";
 import { Note, NoteResponse } from "../../types/types";
 import NavBar from "../Ui/NavBar";
 import Chat from "./Chat";
-import { useSelectedNote } from "../../context/SelectedNoteContext";
 
 
 
@@ -63,27 +70,104 @@ const simpleSandpackConfig: import("@mdxeditor/editor").SandpackConfig = {
 
 export default function EditorPage({ setIsEditorUrl }) {
   const [activeChat, setActiveChat] = useState(false);
-  const [notes, setNotes] = useState("");
   const { selectedNote } = useSelectedNote();
   const { state } = useLocation() as {
     state: { data: NoteResponse | Note; user: userType };
   };
-  const { data, user } = state;
+  const { user } = state;
+  const [text, setText] = useState("");
+  const [note, setNote] = useState(null);
+  const { reloadNotes } = useNotes();
+  const debouncedText = useDebounce(text, 1000);
+  const ref = useRef<MDXEditorMethods>(null);
 
-  let currentNote;
-  let currentText;
+   useEffect(() => {
+     if (!state || !state.data || !state.user) {
+       window.location.href = "/";
+     }
 
-  if ((data as NoteResponse).data?.notes?.length > 0) {
-    currentNote = (data as NoteResponse)?.data?.notes?.find(
-      (note) => note.noteId === data.noteId
-    );
-    currentText = currentNote?.note;
-  } else {
-    currentNote = data as Note;
-    currentText = currentNote?.data?.note;
+     // Lógica para establecer el texto basada en `data`, similar a tu lógica actual
+     let currentNote;
+     let currentText = "";
+    const data = state.data;
+
+
+     if ((data as NoteResponse).data?.notes?.length > 0) {
+       console.log("state.data.notes", data.data);
+       currentNote = data.data.notes.find(
+         (note) => note.noteId === state.data.noteId
+       );
+       currentText = currentNote?.note || "";
+       ref.current?.setMarkdown(currentText);
+       setNote(currentNote);
+     } else if ("data" in state.data) {
+       currentNote = state.data;
+       currentText = currentNote.data?.note || "";
+       ref.current?.setMarkdown(currentText);
+       setNote(currentNote);
+     }
+     // Establece el texto inicial basado en la data disponible
+     setText(currentText);
+   }, []);
+
+   useEffect(() => {
+    const newNote = {...note?.data}
+    newNote.note = debouncedText;
+    void updateNote(user.userId, newNote).then(() => {
+    void reloadNotes();
+    });
+   }, [debouncedText, note]);
+
+  const sendScreenshotToServer = (imgData) => {
+    console.log(note)
+    if(note) {
+      const url = note.data
+        ? `${String(import.meta.env.VITE_API_S3)}${user.userId}/${
+            note.data?.noteId
+          }`
+        : `${String(import.meta.env.VITE_API_S3)}${user.userId}/${
+            note?.noteId
+          }`;
+      const blob = dataURItoBlob(imgData); // Convierte base64 a Blob
+
+      const formData = new FormData();
+      formData.append("image", blob, "screenshot.png");
+
+      fetch(url, {
+        method: "POST",
+        body: formData,
+      })
+        .then((response) => response)
+        .then((data) => void reloadNotes())
+        .catch((error) => console.error("Error:", error));
+    }
+  };
+
+ 
+  function dataURItoBlob(dataURI: string) {
+    const byteString = atob(dataURI.split(",")[1]);
+    const mimeString = dataURI.split(",")[0].split(":")[1].split(";")[0];
+    const ab = new ArrayBuffer(byteString.length);
+    const ia = new Uint8Array(ab);
+    for (let i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+
+    return new Blob([ab], { type: mimeString });
   }
 
-  console.log(selectedNote);
+  const captureScreen = () => {
+    const input = document.getElementsByClassName("_contentEditable_11eqz_352");
+    if (input[0]) {
+      html2canvas(input[0]).then((canvas) => {
+        const imgData = canvas.toDataURL("image/png");
+        sendScreenshotToServer(imgData);
+        
+      }).catch((error) => {
+        console.error("Error capturing screen:", error);
+      });
+    }
+  };
 
   useEffect(() => {
     const editorDiv = document.querySelector<HTMLDivElement>(
@@ -121,14 +205,26 @@ export default function EditorPage({ setIsEditorUrl }) {
       window.location.pathname.includes("/editor") ||
       window.location.pathname.includes("/notes");
     setIsEditorUrl(isEditorUrl);
-  }, []);
+  }, [state, user]);
+
+   useEffect(() => {
+     // Asegura que el DOM haya cargado completamente antes de la captura
+     setTimeout(() => captureScreen(), 3000); // Puede ajustar el tiempo según necesidad
+   }, [debouncedText, note]);
+
+   const handleChange = (newText: string) => {
+      ref.current?.setMarkdown(newText);
+      setText(newText);
+   }
 
   return (
     <>
       <NavBar note={selectedNote} />
-      <div className="editor-container">
+      <div className="editor-container" id="capture">
         <MDXEditor
-          markdown={currentText || ""}
+          markdown={text || ""}
+          ref={ref}
+          onChange={(newText) => handleChange(newText)}
           plugins={[
             toolbarPlugin({
               toolbarContents: () => (

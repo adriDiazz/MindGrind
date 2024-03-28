@@ -69,8 +69,15 @@ const NoteElement: FC<NoteProps> = ({ note }) => {
 	};
 
 	return (
-		<div className={styles.wrapper} onClick={handleNoteClick}>
-			<img src="MockPreview.png" alt="" />
+		<div
+			className={styles.wrapper}
+			onClick={handleNoteClick}
+			style={{
+				backgroundImage: `url(${note.previewUrl})`,
+			}}
+		>
+			{/* <img src="MockPreview.png" alt="" /> */}
+			{/* <img src={note.previewUrl} alt="" className={styles.preview} /> */}
 			<div className={styles.bottom}>
 				<span className={styles.title}>{title}</span>
 

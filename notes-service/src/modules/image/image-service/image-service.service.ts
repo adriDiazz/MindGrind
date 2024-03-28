@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as AWS from 'aws-sdk';
 import { Note } from 'src/modules/note/entities/note.entity';
 import { Repository } from 'typeorm';
+import * as puppeteer from 'puppeteer';
 
 @Injectable()
 export class AwsService {
@@ -22,7 +23,7 @@ export class AwsService {
   async uploadFile(file) {
     const params = {
       Bucket: 'img-previews',
-      Key: file.originalname,
+      Key: file.originalname + Date.now(),
       Body: file.buffer,
     };
 
@@ -39,5 +40,14 @@ export class AwsService {
     const noteIndex = note.notes.findIndex((note) => note.noteId === noteId);
     note.notes[noteIndex].previewUrl = file.Location;
     await this.noteRepository.update(note._id, note);
+  }
+
+  async capture(url: string): Promise<Buffer> {
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.goto(url);
+    const screenshotBuffer = await page.screenshot({ fullPage: true });
+    await browser.close();
+    return screenshotBuffer;
   }
 }

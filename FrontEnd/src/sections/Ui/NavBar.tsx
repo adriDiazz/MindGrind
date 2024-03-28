@@ -14,6 +14,7 @@ import EditIcon from "./Icons/EditIcon";
 import ModalComponent from "./ModalComponent";
 import styles from "./NavBar.module.scss";
 import NavMobile from "./NavMobile";
+import { useNotes } from "../../context/NoteContext";
 
 const LINKS = ["Home", "About", "Contact"];
 
@@ -34,6 +35,7 @@ const NavBar: FC<props> = ({
 }) => {
 	const [opened, setOpened] = useState(false);
 	const [showMobileNav, setShowMobileNav] = useState(false);
+	const { reloadNotes } = useNotes();
 	const [editing, setEditing] = useState(false);
 	const [title, setTitle] = useState(note.title);
 	const { user, signOut } = useUser();
@@ -45,6 +47,9 @@ const NavBar: FC<props> = ({
 			const newNote = { ...note };
 			newNote.title = title;
 			const response = await updateNote(user?.userId, newNote);
+			if (response) {
+				await reloadNotes();
+			}
 			if (response) {
 				setSelectedNote(newNote);
 			}

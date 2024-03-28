@@ -21,13 +21,13 @@ export function App() {
 						{isEditorUrl ? null : <NavBar />}
 						<Routes>
 							<Route path="/" element={<Landing />} />
+							<Route path="/screenshot" element={<div>pito</div>} />
 							<Route path="/home" element={<HomePage setIsEditorUrl={setIsEditorUrl} />} />
 							<Route path="/editor" element={<EditorPage setIsEditorUrl={setIsEditorUrl} />} />
 							<Route path="/notes">
 								<Route path="" element={<NotesPage />} />
 								<Route path=":noteId" element={<EditorPage setIsEditorUrl={setIsEditorUrl} />} />
 							</Route>
-
 							<Route path="*" element={<h2>404</h2>} />
 						</Routes>
 					</SelectedNoteProvider>

@@ -59,7 +59,7 @@ export class TranscriptionService {
   }
 
   async getNotesFake(transcription: string): Promise<string> {
-    return `# Resumen de la historia de la monarquía española
+    return `# Resumen de la polera de la monarquía española
 
 - **Introducción:**
   - Hoy en Memorias de Pezos vamos a hacer un breve repaso de la historia de la monarquía española.

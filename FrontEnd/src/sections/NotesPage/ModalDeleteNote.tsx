@@ -29,7 +29,14 @@ const ModalDeleteNote: FC<ModalDeleteTitleProps> = ({ note, setOpenedDelete }) =
 		<div className={styles.wrapper}>
 			<h1>Delete Note?</h1>
 			<div className={styles.btnWrapper}>
-				<Button isWhite>Cancel</Button>
+				<Button
+					isWhite
+					onClick={() => {
+						setOpenedDelete(false);
+					}}
+				>
+					Cancel
+				</Button>
 				<Button onClick={handleDelete}>Delete</Button>
 			</div>
 		</div>

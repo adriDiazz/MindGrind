@@ -9,6 +9,7 @@ export interface Note {
 	createdAt: Date;
 	updatedAt: Date;
 	category: string;
+	previewUrl: string;
 }
 
 export interface NoteResponse {
