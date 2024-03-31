@@ -25,6 +25,8 @@ export default function LastNotesTable() {
 		}
 	}, [user]);
 
+	console.log(data);
+
 	return (
 		<TableContainer
 			component={Paper}
@@ -47,7 +49,17 @@ export default function LastNotesTable() {
 					</TableRow>
 				</TableHead>
 				<TableBody>
-					{data.map((row) => (
+					{
+						// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+						data?.length === 0 && (
+							<TableRow>
+								<TableCell colSpan={4} align="center">
+									No notes found
+								</TableCell>
+							</TableRow>
+						)
+					}
+					{data?.map((row) => (
 						<TableRow key={row.noteId} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
 							<TableCell component="th" scope="row">
 								<FolderTableIcon />

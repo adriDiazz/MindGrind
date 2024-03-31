@@ -85,19 +85,20 @@ export default function EditorPage({ setIsEditorUrl }) {
      if (!state || !state.data || !state.user) {
        window.location.href = "/";
      }
+     
+    
 
      // Lógica para establecer el texto basada en `data`, similar a tu lógica actual
      let currentNote;
      let currentText = "";
     const data = state.data;
 
-
      if ((data as NoteResponse).data?.notes?.length > 0) {
-       console.log("state.data.notes", data.data);
        currentNote = data.data.notes.find(
          (note) => note.noteId === state.data.noteId
        );
        currentText = currentNote?.note || "";
+       console.log("state.data", state);
        ref.current?.setMarkdown(currentText);
        setNote(currentNote);
      } else if ("data" in state.data) {
@@ -159,14 +160,24 @@ export default function EditorPage({ setIsEditorUrl }) {
   const captureScreen = () => {
     const input = document.getElementsByClassName("_contentEditable_11eqz_352");
     if (input[0]) {
-      html2canvas(input[0]).then((canvas) => {
-        const imgData = canvas.toDataURL("image/png");
-        sendScreenshotToServer(imgData);
-        
-      }).catch((error) => {
-        console.error("Error capturing screen:", error);
-      });
+      const originalStyle = input[0].style.color;
+      input[0].style.color = "black"; // O el color que sea seguro para html2canvas
+
+      html2canvas(input[0])
+        .then((canvas) => {
+          // Restablece el estilo original después de la captura
+          input[0].style.color = originalStyle;
+
+          const imgData = canvas.toDataURL("image/png");
+          sendScreenshotToServer(imgData);
+        })
+        .catch((error) => {
+          // Asegúrate de restablecer el estilo en caso de error también
+          input[0].style.color = originalStyle;
+          console.error("Error capturing screen:", error);
+        });
     }
+    
   };
 
   useEffect(() => {

@@ -44,9 +44,10 @@ export class TranscriptionController {
 
   @Post('pdf-process')
   @UseInterceptors(FileInterceptor('pdf'))
-  async processPdf(@UploadedFile() pdfFile): Promise<string> {
+  async processPdf(@UploadedFile() pdfFile) {
     const transcription = await this.TranscriptionService.processPdf(pdfFile);
-    const chatGptNotes = this.TranscriptionService.getNotesFake(transcription);
-    return chatGptNotes;
+    const chatGptNotes =
+      await this.TranscriptionService.getNotesFake(transcription);
+    return { chatGptNotes };
   }
 }

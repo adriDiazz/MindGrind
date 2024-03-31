@@ -85,3 +85,25 @@ export const deleteNote = (userId: string | undefined, noteId: string): Promise<
 		throw error;
 	}
 };
+
+export const sendPdf = (pdf: string) => {
+	try {
+		const blob = new Blob([pdf], { type: "application/pdf" });
+
+		const formData = new FormData();
+		formData.append("pdf", blob, "note.pdf");
+
+		return fetch(`${String(import.meta.env.VITE_API_PDF)}`, {
+			method: "POST",
+			body: formData,
+		}).then((res) => {
+			if (res.ok) {
+				return res.json();
+			}
+			throw new Error("Error");
+		});
+	} catch (error) {
+		// eslint-disable-next-line no-console
+		console.log(error);
+	}
+};

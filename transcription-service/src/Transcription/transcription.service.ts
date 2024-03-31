@@ -112,13 +112,10 @@ export class TranscriptionService {
 
   async saveNotes(chatGptNotes: string, user: string) {
     try {
-      if (!chatGptNotes) {
-        throw new Error('Invalid note data');
-      }
-
       if (!user) {
         throw new Error('Invalid user data');
       }
+      console.log('Saving note for user:', user);
       const userData = await this._noteModel.findOne({ userId: user });
       if (userData) {
         userData.notes.push({

@@ -14,6 +14,8 @@ interface User {
 	setData: React.Dispatch<React.SetStateAction<ResponseApi | undefined>>;
 	opened: boolean;
 	data: ResponseApi | undefined;
+	openedFile: boolean;
+	setOpenedFile: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const getYoutubeId = (url: string) => {
@@ -24,7 +26,15 @@ const getYoutubeId = (url: string) => {
 	return match && match[2].length === 11 ? match[2] : "";
 };
 
-const VideoCard: FC<User> = ({ user, setOpened, setData, opened, data }) => {
+const VideoCard: FC<User> = ({
+	user,
+	setOpened,
+	setData,
+	opened,
+	data,
+	openedFile,
+	setOpenedFile,
+}) => {
 	const [videoLink, setVideoLink] = useState("");
 	const [loading, setLoading] = useState(false);
 
@@ -60,6 +70,8 @@ const VideoCard: FC<User> = ({ user, setOpened, setData, opened, data }) => {
 			});
 	};
 
+	console.log(openedFile);
+
 	return (
 		<div className={styles.leftWrapper}>
 			<div className={styles.videoWrapper}>
@@ -71,11 +83,15 @@ const VideoCard: FC<User> = ({ user, setOpened, setData, opened, data }) => {
 					onChange={handleVideoLink}
 				/>
 				<button onClick={handleCreateButton}>Create</button>
-				<CustomUploadIcon />
+				<div className={styles.uploadIcon} onClick={() => setOpenedFile(true)}>
+					<CustomUploadIcon />
+				</div>
 			</div>
 			<LastNotesTable />
 			<ModalComponent opened={opened} setOpened={setOpened}>
-				<ResumeModal loading={loading} data={data} videoId={viderId} setLoading={setLoading} />
+				{!openedFile && (
+					<ResumeModal loading={loading} data={data} videoId={viderId} setLoading={setLoading} />
+				)}
 			</ModalComponent>
 		</div>
 	);
