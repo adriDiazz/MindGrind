@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable no-constant-binary-expression */
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useSelectedNote } from "../../context/SelectedNoteContext";
@@ -48,10 +48,9 @@ const NavBar: FC<props> = ({
 			newNote.title = title;
 			const response = await updateNote(user?.userId, newNote);
 			if (response) {
-				await reloadNotes();
-			}
-			if (response) {
 				setSelectedNote(newNote);
+				setTitle(newNote.title);
+				await reloadNotes();
 			}
 			setEditing(false);
 		} else {
@@ -73,7 +72,7 @@ const NavBar: FC<props> = ({
 							{editing && (
 								<input type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
 							)}
-							{!editing && <span>{note?.title}</span>}
+							{!editing && <span>{title}</span>}
 							<div className={styles.editIcon} onClick={() => void handleEdit()}>
 								<EditIcon />
 							</div>

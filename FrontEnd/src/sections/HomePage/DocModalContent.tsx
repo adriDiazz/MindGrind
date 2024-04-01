@@ -1,4 +1,7 @@
-import { sendPdf } from "../../services/NotesService";
+import { useNavigate } from "react-router-dom";
+
+import { useUser } from "../../context/UserContext";
+import { createNote, sendPdf } from "../../services/NotesService";
 import Button from "../Ui/Button";
 import styles from "./DocModal.module.scss";
 
@@ -13,13 +16,29 @@ export interface DocModalContentProps {
 const DocModalContent: React.FC<DocModalContentProps> = ({
 	files,
 	imageSrc,
-	setSelectingDirectory,
 	fileName,
 	setFilename,
 }) => {
+	const navigate = useNavigate();
+	const { user } = useUser();
+
 	const handleUpload = async () => {
-		const noteResponse = await sendPdf(files[0]); 
-        console.log(response);
+		const chatGptNotes = await sendPdf(files[0]);
+		const noteContent = chatGptNotes.chatGptNotes;
+		console.log(noteContent);
+		const createdNote = await createNote({
+			data: { chatGptNotes: noteContent },
+			user,
+		});
+		const userData = createdNote.data;
+		console.log(createdNote);
+
+		const note = userData.notes?.find((note) => note.noteId === createdNote.noteId);
+
+
+		navigate(`/notes/${note.noteId}`, {
+			state: { data: { data: note }, user },
+		});
 	};
 
 	return (

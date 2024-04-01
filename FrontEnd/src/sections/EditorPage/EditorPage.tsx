@@ -70,7 +70,7 @@ const simpleSandpackConfig: import("@mdxeditor/editor").SandpackConfig = {
 
 export default function EditorPage({ setIsEditorUrl }) {
   const [activeChat, setActiveChat] = useState(false);
-  const { selectedNote } = useSelectedNote();
+  const { selectedNote, setSelectedNote } = useSelectedNote();
   const { state } = useLocation() as {
     state: { data: NoteResponse | Note; user: userType };
   };
@@ -80,6 +80,18 @@ export default function EditorPage({ setIsEditorUrl }) {
   const { reloadNotes } = useNotes();
   const debouncedText = useDebounce(text, 1000);
   const ref = useRef<MDXEditorMethods>(null);
+
+  let currentNote;
+  const data = state.data;
+
+  if ((data as NoteResponse).data?.notes?.length > 0) {
+    currentNote = data.data.notes.find(
+      (note) => note.noteId === state.data.noteId
+    );
+  } else if ("data" in state.data) {
+    currentNote = state.data;
+  }
+
 
    useEffect(() => {
      if (!state || !state.data || !state.user) {
@@ -98,7 +110,6 @@ export default function EditorPage({ setIsEditorUrl }) {
          (note) => note.noteId === state.data.noteId
        );
        currentText = currentNote?.note || "";
-       console.log("state.data", state);
        ref.current?.setMarkdown(currentText);
        setNote(currentNote);
      } else if ("data" in state.data) {
@@ -120,7 +131,6 @@ export default function EditorPage({ setIsEditorUrl }) {
    }, [debouncedText, note]);
 
   const sendScreenshotToServer = (imgData) => {
-    console.log(note)
     if(note) {
       const url = note.data
         ? `${String(import.meta.env.VITE_API_S3)}${user.userId}/${
@@ -228,9 +238,10 @@ export default function EditorPage({ setIsEditorUrl }) {
       setText(newText);
    }
 
+
   return (
     <>
-      <NavBar note={selectedNote} />
+      <NavBar note={currentNote.data} />
       <div className="editor-container" id="capture">
         <MDXEditor
           markdown={text || ""}
