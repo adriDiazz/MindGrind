@@ -4,9 +4,10 @@
 import { FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { useNotes } from "../../context/NoteContext";
 import { useSelectedNote } from "../../context/SelectedNoteContext";
 import { useUser } from "../../context/UserContext";
-import { updateNote } from "../../services/NotesService";
+import { downloadPdf, updateNote } from "../../services/NotesService";
 import { Note } from "../../types/types";
 import AuthForm from "../Login/AuthForm";
 import Button from "./Button";
@@ -14,7 +15,6 @@ import EditIcon from "./Icons/EditIcon";
 import ModalComponent from "./ModalComponent";
 import styles from "./NavBar.module.scss";
 import NavMobile from "./NavMobile";
-import { useNotes } from "../../context/NoteContext";
 
 const LINKS = ["Home", "About", "Contact"];
 
@@ -38,9 +38,16 @@ const NavBar: FC<props> = ({
 	const { reloadNotes } = useNotes();
 	const [editing, setEditing] = useState(false);
 	const [title, setTitle] = useState(note.title);
+	const [exportBtn, setExportBtn] = useState(false);
 	const { user, signOut } = useUser();
 	const { setSelectedNote } = useSelectedNote();
 	const navigate = useNavigate();
+
+	useEffect(() => {
+		const isEditorUrl =
+			window.location.pathname.includes("/editor") || window.location.pathname.includes("/notes");
+		setExportBtn(isEditorUrl);
+	}, []);
 
 	const handleEdit = async () => {
 		if (editing) {
@@ -56,6 +63,12 @@ const NavBar: FC<props> = ({
 		} else {
 			setEditing(true);
 		}
+	};
+
+	const handeleExportPdf = () => {
+		const input = document.getElementsByClassName("_contentEditable_11eqz_352")[0];
+
+		const data = downloadPdf(note.note);
 	};
 
 	return (
@@ -97,6 +110,16 @@ const NavBar: FC<props> = ({
 							</li>
 						))}
 					</ul>
+				)}
+
+				{user && exportBtn && (
+					<Button
+						className={`${styles.button} ${styles.navbtn}`}
+						onClick={() => void handeleExportPdf()}
+						id="navbtn"
+					>
+						Export Pdf
+					</Button>
 				)}
 
 				{user && note.noteId === "" && (

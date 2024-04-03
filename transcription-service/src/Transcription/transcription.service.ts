@@ -125,6 +125,8 @@ export class TranscriptionService {
           updatedAt: now(),
           title: 'Untitled document',
           category: 'General',
+          previewUrl:
+            'https://img-previews.s3.eu-north-1.amazonaws.com/screenshot.png1711999247059',
         });
         const data = await userData.save();
         return {
@@ -142,6 +144,8 @@ export class TranscriptionService {
               createdAt: now(),
               updatedAt: now(),
               title: 'Untitled document',
+              previewUrl:
+                '	https://img-previews.s3.eu-north-1.amazonaws.com/screenshot.png1711999247059',
             },
           ],
           isDirectory: false,

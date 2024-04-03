@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Get,
   Param,
@@ -31,18 +32,30 @@ export class AwsController {
     }
   }
 
-  @Get('screenshot')
-  async getScreenshot(@Query('url') url: string, @Res() res: Response) {
-    if (!url) {
-      return res.status(400).send('URL is required');
-    }
-    try {
-      const screenshotBuffer = await this.awsService.capture(url);
-      res.setHeader('Content-Type', 'image/png');
-      res.setHeader('Content-Length', screenshotBuffer.length.toString());
-      res.send(screenshotBuffer);
-    } catch (error) {
-      res.status(500).send(`Failed to capture screenshot: ${error.message}`);
-    }
+  @Post('upload')
+  @UseInterceptors(FileInterceptor('image'))
+  async uploadImage(@UploadedFile() file: File) {
+    return this.awsService.uploadFile(file);
+  }
+
+  @Post()
+  async generatePdf(@Body('markdown') markdown: string, @Res() res: Response) {
+    const pdfBuffer = await this.awsService.markdownToPdf(markdown);
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', 'attachment; filename=download.pdf');
+    res.send(pdfBuffer);
+  }
+
+  @Post('preview')
+  async generatePreview(
+    @Body('markdown') markdown: string,
+    @Res() res: Response,
+  ) {
+    const screenshot =
+      await this.awsService.takeScreenshotFromMarkdown(markdown);
+
+    res.setHeader('Content-Type', 'image/png');
+    res.send(screenshot);
   }
 }

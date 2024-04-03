@@ -107,3 +107,31 @@ export const sendPdf = (pdf: string) => {
 		console.log(error);
 	}
 };
+
+export async function downloadPdf(htmlContent) {
+	// La función se mantiene mayormente igual, pero asegúrate de cambiar la propiedad en el cuerpo de la solicitud a 'html'
+	try {
+		const response = await fetch(`${String(import.meta.env.VITE_DOWNLOAD_PDF)}`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({ markdown: htmlContent }),
+		});
+
+		if (!response.ok) {
+			throw new Error("Network response was not ok.");
+		}
+
+		const blob = await response.blob();
+		const downloadUrl = window.URL.createObjectURL(blob);
+		const link = document.createElement("a");
+		link.href = downloadUrl;
+		link.setAttribute("download", "file.pdf"); // or any other name you want
+		document.body.appendChild(link);
+		link.click();
+		link.parentNode.removeChild(link);
+	} catch (error) {
+		console.error("Error downloading the PDF:", error);
+	}
+}

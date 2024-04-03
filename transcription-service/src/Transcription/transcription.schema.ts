@@ -10,6 +10,7 @@ export interface NoteType {
   createdAt: Date;
   title: string;
   category: string;
+  previewUrl: string;
 }
 
 @Schema({ timestamps: true }) // Habilita las marcas de tiempo automáticas

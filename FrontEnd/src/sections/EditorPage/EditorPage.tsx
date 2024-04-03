@@ -16,6 +16,7 @@ import {
 	CreateLink,
 	diffSourcePlugin,
 	headingsPlugin,
+	imagePlugin,
 	InsertAdmonition,
 	InsertCodeBlock,
 	InsertFrontmatter,
@@ -37,12 +38,10 @@ import {
 	toolbarPlugin,
 	UndoRedo,
 } from "@mdxeditor/editor";
-import html2canvas from "html2canvas";
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 
 import { useNotes } from "../../context/NoteContext";
-import { useSelectedNote } from "../../context/SelectedNoteContext";
 import { userType } from "../../context/UserContext";
 import useDebounce from "../../hooks/useDebounce";
 import { updateNote } from "../../services/NotesService";
@@ -70,7 +69,6 @@ const simpleSandpackConfig: import("@mdxeditor/editor").SandpackConfig = {
 
 export default function EditorPage({ setIsEditorUrl }) {
   const [activeChat, setActiveChat] = useState(false);
-  const { selectedNote, setSelectedNote } = useSelectedNote();
   const { state } = useLocation() as {
     state: { data: NoteResponse | Note; user: userType };
   };
@@ -92,45 +90,7 @@ export default function EditorPage({ setIsEditorUrl }) {
     currentNote = state.data;
   }
 
-
-   useEffect(() => {
-     if (!state || !state.data || !state.user) {
-       window.location.href = "/";
-     }
-     
-    
-
-     // Lógica para establecer el texto basada en `data`, similar a tu lógica actual
-     let currentNote;
-     let currentText = "";
-    const data = state.data;
-
-     if ((data as NoteResponse).data?.notes?.length > 0) {
-       currentNote = data.data.notes.find(
-         (note) => note.noteId === state.data.noteId
-       );
-       currentText = currentNote?.note || "";
-       ref.current?.setMarkdown(currentText);
-       setNote(currentNote);
-     } else if ("data" in state.data) {
-       currentNote = state.data;
-       currentText = currentNote.data?.note || "";
-       ref.current?.setMarkdown(currentText);
-       setNote(currentNote);
-     }
-     // Establece el texto inicial basado en la data disponible
-     setText(currentText);
-   }, []);
-
-   useEffect(() => {
-    const newNote = {...note?.data}
-    newNote.note = debouncedText;
-    void updateNote(user.userId, newNote).then(() => {
-    void reloadNotes();
-    });
-   }, [debouncedText, note]);
-
-  const sendScreenshotToServer = (imgData) => {
+  const sendScreenshotToServer = (blob) => {
     if(note) {
       const url = note.data
         ? `${String(import.meta.env.VITE_API_S3)}${user.userId}/${
@@ -139,8 +99,6 @@ export default function EditorPage({ setIsEditorUrl }) {
         : `${String(import.meta.env.VITE_API_S3)}${user.userId}/${
             note?.noteId
           }`;
-      const blob = dataURItoBlob(imgData); // Convierte base64 a Blob
-
       const formData = new FormData();
       formData.append("image", blob, "screenshot.png");
 
@@ -154,41 +112,149 @@ export default function EditorPage({ setIsEditorUrl }) {
     }
   };
 
- 
-  function dataURItoBlob(dataURI: string) {
-    const byteString = atob(dataURI.split(",")[1]);
-    const mimeString = dataURI.split(",")[0].split(":")[1].split(";")[0];
-    const ab = new ArrayBuffer(byteString.length);
-    const ia = new Uint8Array(ab);
-    for (let i = 0; i < byteString.length; i++) {
-      ia[i] = byteString.charCodeAt(i);
-    }
+  function resizeImage(file, maxWidth, maxHeight, callback) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        let width = img.width;
+        let height = img.height;
 
-    return new Blob([ab], { type: mimeString });
+        if (width > height) {
+          if (width > maxWidth) {
+            height *= maxWidth / width;
+            width = maxWidth;
+          }
+        } else if (height > maxHeight) {
+            width *= maxHeight / height;
+            height = maxHeight;
+          }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, width, height);
+
+        canvas.toBlob((blob) => {
+          callback(blob);
+        }, file.type || "image/png");
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
   }
 
-  const captureScreen = () => {
-    const input = document.getElementsByClassName("_contentEditable_11eqz_352");
-    if (input[0]) {
-      const originalStyle = input[0].style.color;
-      input[0].style.color = "black"; // O el color que sea seguro para html2canvas
+  const sendImageS3 = async (imgData) => {
+    if (note) {
+      const url = `${String(import.meta.env.VITE_API_S3)}`;
 
-      html2canvas(input[0])
-        .then((canvas) => {
-          // Restablece el estilo original después de la captura
-          input[0].style.color = originalStyle;
+      const imgResized = await new Promise((resolve, reject) => {
+        resizeImage(imgData, 500, 500, async (blob) => {
+          const formData = new FormData();
+          formData.append("image", blob, "screenshot.png");
 
-          const imgData = canvas.toDataURL("image/png");
-          sendScreenshotToServer(imgData);
-        })
-        .catch((error) => {
-          // Asegúrate de restablecer el estilo en caso de error también
-          input[0].style.color = originalStyle;
-          console.error("Error capturing screen:", error);
+          try {
+            const response = await fetch(url, {
+              method: "POST",
+              body: formData,
+            });
+
+            const data = await response.json();
+            resolve(data);
+          } catch (error) {
+            reject(error);
+          }
         });
+      });
+
+      return imgResized;
     }
-    
   };
+
+  
+
+  const captureScreen = async () => {
+    if (note) {
+      const url = `${String(import.meta.env.VITE_DOWNLOAD_PDF)}/preview`;
+      const markdownContent = note.data ? note.data.note : note.note;
+
+      const screenshot = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ markdown: markdownContent }),
+      })
+
+      const imgData = await screenshot.blob();
+
+      sendScreenshotToServer(imgData);
+      
+      }
+    };
+
+  const handleChange = (newText: string) => {
+    ref.current?.setMarkdown(newText);
+    setText(newText);
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      const navbarElement = document.querySelector("._toolbarRoot_11eqz_145"); // Asegúrate de usar la clase correcta
+      const SCROLL_THRESHOLD = 65;
+
+      if (currentScrollY > SCROLL_THRESHOLD) {
+        console.log(currentScrollY);
+        navbarElement.style.position = "fixed";
+        navbarElement.style.top = "0";
+        navbarElement.style.width = "90vw";
+      } else {
+        console.log(currentScrollY);
+        navbarElement.style.position = "unset";
+        navbarElement.style.width = "inherit";
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    // Limpieza al desmontar
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+       if (!state || !state.data || !state.user) {
+         window.location.href = "/";
+       }
+       let currentNote;
+       let currentText = "";
+       const data = state.data;
+
+       if ((data as NoteResponse).data?.notes?.length > 0) {
+         currentNote = data.data.notes.find(
+           (note) => note.noteId === state.data.noteId
+         );
+         currentText = currentNote?.note || "";
+         ref.current?.setMarkdown(currentText);
+         setNote(currentNote);
+       } else if ("data" in state.data) {
+         currentNote = state.data;
+         currentText = currentNote.data?.note || "";
+         ref.current?.setMarkdown(currentText);
+         setNote(currentNote);
+       }
+       // Establece el texto inicial basado en la data disponible
+       setText(currentText);
+     }, []);
+
+  useEffect(() => {
+    const newNote = { ...note?.data };
+    newNote.note = debouncedText;
+    void updateNote(user.userId, newNote).then(() => {
+      void reloadNotes();
+    });
+  }, [debouncedText, note]);
 
   useEffect(() => {
     const editorDiv = document.querySelector<HTMLDivElement>(
@@ -230,14 +296,8 @@ export default function EditorPage({ setIsEditorUrl }) {
 
    useEffect(() => {
      // Asegura que el DOM haya cargado completamente antes de la captura
-     setTimeout(() => captureScreen(), 3000); // Puede ajustar el tiempo según necesidad
+     setTimeout(() => void captureScreen(), 3000); // Puede ajustar el tiempo según necesidad
    }, [debouncedText, note]);
-
-   const handleChange = (newText: string) => {
-      ref.current?.setMarkdown(newText);
-      setText(newText);
-   }
-
 
   return (
     <>
@@ -277,8 +337,6 @@ export default function EditorPage({ setIsEditorUrl }) {
                       {
                         fallback: () => (
                           <>
-                            <InsertCodeBlock />
-                            <InsertSandpack />
                           </>
                         ),
                       },
@@ -290,6 +348,13 @@ export default function EditorPage({ setIsEditorUrl }) {
             headingsPlugin(),
             listsPlugin(),
             quotePlugin(),
+            imagePlugin({
+              imageUploadHandler: async (image) => {
+                const uploaded = await sendImageS3(image);
+
+                return uploaded.Location
+              },
+            }),
             tablePlugin(),
             thematicBreakPlugin(),
             markdownShortcutPlugin(),
