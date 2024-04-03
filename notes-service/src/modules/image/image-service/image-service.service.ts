@@ -5,7 +5,6 @@ import * as AWS from 'aws-sdk';
 import { Note } from 'src/modules/note/entities/note.entity';
 import { Repository } from 'typeorm';
 import * as puppeteer from 'puppeteer';
-import * as marked from 'marked';
 import { markdownToHtml } from 'src/utils/markdownToHtml';
 
 @Injectable()

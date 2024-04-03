@@ -1,10 +1,8 @@
 import {
   Body,
   Controller,
-  Get,
   Param,
   Post,
-  Query,
   Res,
   UploadedFile,
   UseInterceptors,
