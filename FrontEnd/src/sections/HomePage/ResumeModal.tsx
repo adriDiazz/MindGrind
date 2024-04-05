@@ -29,14 +29,17 @@ const ResumeModal: FC<ResumeModalProps> = ({ loading, videoId, data, setLoading 
 			user,
 		})
 			.then((response) => {
-				const currentNote = response.data?.notes?.find(
-					(note) => note.noteId === response.noteId
-				);
+				const currentNote = response.data?.notes?.find((note) => note.noteId === response.noteId);
 				setSelectedNote(currentNote as Note);
-				navigate("/editor", { state: { data: {
-					data: currentNote,
-					noteId: response.noteId,
-				}, user } });
+				navigate("/editor", {
+					state: {
+						data: {
+							data: currentNote,
+							noteId: response.noteId,
+						},
+						user,
+					},
+				});
 			})
 			.catch((error) => {
 				// eslint-disable-next-line no-console

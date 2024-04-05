@@ -1,6 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { CreateGptChatDto } from './dto/create-gpt-chat.dto';
-import { UpdateGptChatDto } from './dto/update-gpt-chat.dto';
 import OpenAI from 'openai';
 import { countTextWords } from 'src/utils/utils';
 

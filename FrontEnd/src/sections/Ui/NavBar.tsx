@@ -10,6 +10,7 @@ import { useUser } from "../../context/UserContext";
 import { downloadPdf, updateNote } from "../../services/NotesService";
 import { Note } from "../../types/types";
 import AuthForm from "../Login/AuthForm";
+import BtnLoader from "./BtnLoader";
 import Button from "./Button";
 import EditIcon from "./Icons/EditIcon";
 import ModalComponent from "./ModalComponent";
@@ -39,6 +40,7 @@ const NavBar: FC<props> = ({
 	const [editing, setEditing] = useState(false);
 	const [title, setTitle] = useState(note.title);
 	const [exportBtn, setExportBtn] = useState(false);
+	const [loading, setLoading] = useState(false);
 	const { user } = useUser();
 	const { setSelectedNote } = useSelectedNote();
 	const navigate = useNavigate();
@@ -48,8 +50,6 @@ const NavBar: FC<props> = ({
 			window.location.pathname.includes("/editor") || window.location.pathname.includes("/notes");
 		setExportBtn(isEditorUrl);
 	}, []);
-
-	console.log("note", exportBtn);
 
 	const handleEdit = async () => {
 		if (editing) {
@@ -67,16 +67,32 @@ const NavBar: FC<props> = ({
 		}
 	};
 
-	const handeleExportPdf = () => {
+	const handeleExportPdf = async () => {
+		setLoading(true);
 		const input = document.getElementsByClassName("_contentEditable_11eqz_352")[0];
-
-		const data = downloadPdf(note.note);
+		const data = await downloadPdf(note.note);
+		setLoading(false);
 	};
+
+	const handleLogoClick = () => {
+		if (user && exportBtn) {
+			navigate("/notes");
+		} else {
+			navigate("/home");
+		}
+	};
+
+	console.log("loading", loading);
 
 	return (
 		<>
 			<nav className={styles.wrapper}>
-				<div className={styles.logoWrapper} onClick={() => navigate("/home")}>
+				<div
+					className={styles.logoWrapper}
+					onClick={() => {
+						handleLogoClick();
+					}}
+				>
 					<img src="/logo.png" alt="" />
 					{!note && <span>NoteTube</span>}
 				</div>
@@ -120,7 +136,7 @@ const NavBar: FC<props> = ({
 						onClick={() => void handeleExportPdf()}
 						id="navbtn"
 					>
-						Export Pdf
+						{loading ? <BtnLoader /> : "Export PDF"}
 					</Button>
 				)}
 

@@ -1,5 +1,5 @@
 .wrapper {
-    height: 50vh;
+    height: 45vh;
     width: 70vw;
     display: flex;
     font-family: 'MazzardR';
@@ -46,9 +46,9 @@
 }
 
 //media queries for laptop
-@media (min-width: 1024px) {
+@media (min-width: 1024px) and (max-width: 1440px) {
     .wrapper {
-    height: 70vh;
+    height: 60vh;
     width: 90vw;
     display: flex;
     font-family: 'MazzardR';

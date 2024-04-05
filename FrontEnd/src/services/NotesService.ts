@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { CreateNoteType, Note, NoteResponse } from "../types/types";
 
@@ -53,11 +54,11 @@ export const updateNote = (userId: string | undefined, note: Note): Promise<unkn
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify({ note }),
-		}).then((res) => {
-			if (res.ok) {
-				return res.json();
-			}
-			throw new Error("Error");
+		}).then(() => {
+			// if (res.ok) {
+			// 	return res.json();
+			// }
+			// throw new Error("Error");
 		});
 	} catch (error) {
 		// eslint-disable-next-line no-console
@@ -86,7 +87,7 @@ export const deleteNote = (userId: string | undefined, noteId: string): Promise<
 	}
 };
 
-export const sendPdf = (pdf: string) => {
+export const sendPdf = (pdf: string): Promise<any> | undefined => {
 	try {
 		const blob = new Blob([pdf], { type: "application/pdf" });
 
@@ -108,7 +109,7 @@ export const sendPdf = (pdf: string) => {
 	}
 };
 
-export async function downloadPdf(htmlContent) {
+export async function downloadPdf(htmlContent: string): Promise<void> {
 	// La función se mantiene mayormente igual, pero asegúrate de cambiar la propiedad en el cuerpo de la solicitud a 'html'
 	try {
 		const response = await fetch(`${String(import.meta.env.VITE_DOWNLOAD_PDF)}`, {
@@ -130,7 +131,7 @@ export async function downloadPdf(htmlContent) {
 		link.setAttribute("download", "file.pdf"); // or any other name you want
 		document.body.appendChild(link);
 		link.click();
-		link.parentNode.removeChild(link);
+		link.parentNode?.removeChild(link);
 	} catch (error) {
 		console.error("Error downloading the PDF:", error);
 	}

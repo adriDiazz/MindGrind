@@ -7,7 +7,9 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
+import { useSelectedNote } from "../../context/SelectedNoteContext";
 import { useUser } from "../../context/UserContext";
 import { getLastModifiedNotes } from "../../services/NotesService";
 import { Note } from "../../types/types";
@@ -16,6 +18,8 @@ import FolderTableIcon from "../Ui/Icons/FolderTableIcon";
 export default function LastNotesTable() {
 	const [data, setData] = useState<Note[]>([]);
 	const { user } = useUser();
+	const { setSelectedNote } = useSelectedNote();
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		if (user) {
@@ -24,8 +28,6 @@ export default function LastNotesTable() {
 			});
 		}
 	}, [user]);
-
-	console.log(data);
 
 	return (
 		<TableContainer
@@ -60,7 +62,22 @@ export default function LastNotesTable() {
 						)
 					}
 					{data?.map((row) => (
-						<TableRow key={row.noteId} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
+						<TableRow
+							key={row.noteId}
+							sx={{
+								"&:last-child td, &:last-child th": { border: 0 },
+								"&:hover": {
+									backgroundColor: "rgba(0, 0, 0, 0.04)", // Cambia esto según tu preferencia
+								},
+								cursor: "pointer",
+							}}
+							onClick={() => {
+								setSelectedNote(row);
+								navigate(`/notes/${row.noteId}`, {
+									state: { data: { data: row }, user },
+								});
+							}}
+						>
 							<TableCell component="th" scope="row">
 								<FolderTableIcon />
 							</TableCell>

@@ -8,13 +8,14 @@ interface ChatMessageProps {
 	setActiveChat: (activeChat: boolean) => void;
 	activeChat: boolean;
 }
+interface Message {
+	text: string;
+	isSent: boolean;
+}
 
 const ChatMessage: FC<ChatMessageProps> = ({ activeChat, setActiveChat }) => {
-	const [messages, setMessages] = useState([
-		{ text: "Hola", isSent: true },
-		{ text: "Hola, ¿cómo estás?", isSent: false },
-		// Agrega más mensajes aquí
-	]);
+	const [messages, setMessages] = useState<Message[]>([]);
+	const [inputValue, setInputValue] = useState("");
 	const [isVisible, setIsVisible] = useState(false);
 
 	useEffect(() => {
@@ -24,6 +25,11 @@ const ChatMessage: FC<ChatMessageProps> = ({ activeChat, setActiveChat }) => {
 
 		return () => clearTimeout(timer); // limpia el temporizador si el componente se desmonta
 	}, []);
+
+	const handelSendMessage = () => {
+		setMessages([...messages, { text: inputValue, isSent: false }]);
+		setInputValue("");
+	}
 
 	return (
 		<div className={`${styles.chatWrapper} ${isVisible ? styles.visible : ""}`}>
@@ -41,8 +47,13 @@ const ChatMessage: FC<ChatMessageProps> = ({ activeChat, setActiveChat }) => {
 				))}
 			</div>
 			<div className={styles.chatFooter}>
-				<input type="text" placeholder="Type a message" />
-				<button>
+				<input
+					type="text"
+					placeholder="Type a message"
+					value={inputValue}
+					onChange={(e) => setInputValue(e.target.value)}
+				/>
+				<button onClick={handelSendMessage}>
 					<SendIcon />
 				</button>
 			</div>
