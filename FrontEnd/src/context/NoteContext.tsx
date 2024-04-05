@@ -41,12 +41,14 @@ export const NotesProvider = ({ children }: { children: React.ReactNode }) => {
 
 	const reloadNotes = async () => {
 		try {
+			console.log("reloadNotes");
 			setLoading(true);
 			const response = await fetch(`${String(import.meta.env.VITE_API_NOTES)}${user?.userId}`);
 			if (!response.ok) {
 				throw new Error("Failed to fetch notes");
 			}
 			const data = (await response.json()) as NoteResponse;
+			console.log("data", data.notes);
 			setNotes(data.notes);
 			setLoading(false);
 		} catch (error) {

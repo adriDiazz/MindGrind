@@ -30,10 +30,13 @@ const ResumeModal: FC<ResumeModalProps> = ({ loading, videoId, data, setLoading 
 		})
 			.then((response) => {
 				const currentNote = response.data?.notes?.find(
-					(note) => note.noteId === response.data.noteId
+					(note) => note.noteId === response.noteId
 				);
 				setSelectedNote(currentNote as Note);
-				navigate("/editor", { state: { data: response, user } });
+				navigate("/editor", { state: { data: {
+					data: currentNote,
+					noteId: response.noteId,
+				}, user } });
 			})
 			.catch((error) => {
 				// eslint-disable-next-line no-console

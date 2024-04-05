@@ -12,6 +12,7 @@ import NavBar from "./sections/Ui/NavBar";
 
 export function App() {
 	const [isEditorUrl, setIsEditorUrl] = useState(false);
+	console.log("isEditorUrl", isEditorUrl);
 
 	return (
 		<>

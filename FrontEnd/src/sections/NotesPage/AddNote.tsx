@@ -22,7 +22,7 @@ function AddNote() {
 		const userData = data.data;
 
 		const note = userData.notes?.find((note) => note.noteId === data.noteId);
-
+		console.log("note", note);
 		navigate(`/notes/${note.noteId}`, {
 			state: { data: { data: note }, user },
 		});

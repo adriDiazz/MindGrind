@@ -21,7 +21,6 @@ import {
 	InsertCodeBlock,
 	InsertFrontmatter,
 	InsertImage,
-	InsertSandpack,
 	InsertTable,
 	InsertThematicBreak,
 	linkDialogPlugin,
@@ -172,12 +171,12 @@ export default function EditorPage({ setIsEditorUrl }) {
     }
   };
 
-  
-
   const captureScreen = async () => {
-    if (note) {
+    if (text) {
       const url = `${String(import.meta.env.VITE_DOWNLOAD_PDF)}/preview`;
-      const markdownContent = note.data ? note.data.note : note.note;
+      const markdownContent = text;
+
+      console.log("markdownContent", markdownContent);
 
       const screenshot = await fetch(url, {
         method: "POST",
@@ -249,11 +248,15 @@ export default function EditorPage({ setIsEditorUrl }) {
      }, []);
 
   useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
     const newNote = { ...note?.data };
     newNote.note = debouncedText;
-    void updateNote(user.userId, newNote).then(() => {
-      void reloadNotes();
-    });
+    void updateNote(user.userId, newNote)
+
+    // Limpieza al desmontar
+    return () => controller.abort();
+
   }, [debouncedText, note]);
 
   useEffect(() => {
@@ -290,13 +293,16 @@ export default function EditorPage({ setIsEditorUrl }) {
   useEffect(() => {
     const isEditorUrl =
       window.location.pathname.includes("/editor") ||
-      window.location.pathname.includes("/notes");
+      window.location.pathname.includes("/notes/");
     setIsEditorUrl(isEditorUrl);
   }, [state, user]);
 
    useEffect(() => {
      // Asegura que el DOM haya cargado completamente antes de la captura
-     setTimeout(() => void captureScreen(), 3000); // Puede ajustar el tiempo según necesidad
+     const timeOut = setTimeout(() => void captureScreen(), 3000); // Puede ajustar el tiempo según necesidad
+
+      // Limpieza al desmontar
+      return () => clearTimeout(timeOut);
    }, [debouncedText, note]);
 
   return (

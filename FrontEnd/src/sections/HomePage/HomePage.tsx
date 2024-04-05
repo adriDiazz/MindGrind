@@ -23,7 +23,7 @@ const HomePage = ({ setIsEditorUrl }) => {
 
 	useEffect(() => {
 		const isEditorUrl =
-			window.location.pathname.includes("/editor") || window.location.pathname.includes("/notes");
+			window.location.pathname.includes("/editor") || window.location.pathname.includes("/notes/");
 		setIsEditorUrl(isEditorUrl);
 	}, [setIsEditorUrl]);
 

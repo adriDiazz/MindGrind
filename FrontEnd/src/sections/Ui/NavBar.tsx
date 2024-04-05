@@ -39,7 +39,7 @@ const NavBar: FC<props> = ({
 	const [editing, setEditing] = useState(false);
 	const [title, setTitle] = useState(note.title);
 	const [exportBtn, setExportBtn] = useState(false);
-	const { user, signOut } = useUser();
+	const { user } = useUser();
 	const { setSelectedNote } = useSelectedNote();
 	const navigate = useNavigate();
 
@@ -48,6 +48,8 @@ const NavBar: FC<props> = ({
 			window.location.pathname.includes("/editor") || window.location.pathname.includes("/notes");
 		setExportBtn(isEditorUrl);
 	}, []);
+
+	console.log("note", exportBtn);
 
 	const handleEdit = async () => {
 		if (editing) {
@@ -119,16 +121,6 @@ const NavBar: FC<props> = ({
 						id="navbtn"
 					>
 						Export Pdf
-					</Button>
-				)}
-
-				{user && note.noteId === "" && (
-					<Button
-						className={`${styles.button} ${styles.navbtn}`}
-						onClick={() => signOut()}
-						id="navbtn"
-					>
-						Log Out
 					</Button>
 				)}
 
