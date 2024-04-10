@@ -257,7 +257,7 @@ export default function EditorPage({ setIsEditorUrl }) {
     // Limpieza al desmontar
     return () => controller.abort();
 
-  }, [debouncedText, note]);
+  }, [debouncedText]);
 
   useEffect(() => {
     const editorDiv = document.querySelector<HTMLDivElement>(

@@ -8,6 +8,7 @@ import { Note, NoteResponse } from "../../types/types";
 import Loader from "../Ui/Loader";
 import { ResponseApi } from "./HomePage";
 import style from "./ResumeModal.module.scss";
+import { useNotes } from "../../context/NoteContext";
 
 interface ResumeModalProps {
 	loading: boolean;
@@ -20,6 +21,7 @@ const ResumeModal: FC<ResumeModalProps> = ({ loading, videoId, data, setLoading 
 	const notesShort = data?.chatGptNotes.slice(0, 2000);
 	const navigate = useNavigate();
 	const { user } = useUser();
+	const { reloadNotes } = useNotes();
 	const { setSelectedNote } = useSelectedNote();
 	const [response, setResponse] = useState<NoteResponse>();
 
@@ -31,6 +33,7 @@ const ResumeModal: FC<ResumeModalProps> = ({ loading, videoId, data, setLoading 
 			.then((response) => {
 				const currentNote = response.data?.notes?.find((note) => note.noteId === response.noteId);
 				setSelectedNote(currentNote as Note);
+				void reloadNotes();
 				navigate("/editor", {
 					state: {
 						data: {

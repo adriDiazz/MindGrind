@@ -32,4 +32,10 @@ export interface NoteType {
   title: string;
   category: string;
   previewUrl: string;
+  chat: Chat[];
+}
+
+export interface Chat {
+  message: string;
+  isSent: boolean;
 }

@@ -5,11 +5,13 @@ import {
   Param,
   Post,
   UploadedFile,
+  UseFilters,
   UseInterceptors,
 } from '@nestjs/common';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { TranscriptionService } from './transcription.service';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { HttpExceptionFilter } from 'src/utils/HttpExceptionFilter';
 
 @Controller('youtube-transcript')
 export class TranscriptionController {
@@ -43,7 +45,13 @@ export class TranscriptionController {
   }
 
   @Post('pdf-process')
-  @UseInterceptors(FileInterceptor('pdf'))
+  @UseInterceptors(
+    FileInterceptor('pdf', {
+      limits: {
+        fileSize: 1024 * 1024, // 1MB
+      },
+    }),
+  )
   async processPdf(@UploadedFile() pdfFile) {
     const transcription = await this.TranscriptionService.processPdf(pdfFile);
     const chatGptNotes =

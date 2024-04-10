@@ -75,14 +75,8 @@ const NavBar: FC<props> = ({
 	};
 
 	const handleLogoClick = () => {
-		if (user && exportBtn) {
-			navigate("/notes");
-		} else {
-			navigate("/home");
-		}
+		navigate("/home");
 	};
-
-	console.log("loading", loading);
 
 	return (
 		<>

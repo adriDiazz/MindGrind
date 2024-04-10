@@ -124,6 +124,7 @@ export class TranscriptionService {
           createdAt: now(),
           updatedAt: now(),
           title: 'Untitled document',
+          chat: [],
           category: 'General',
           previewUrl:
             'https://img-previews.s3.eu-north-1.amazonaws.com/screenshot.png1711999247059',
@@ -144,6 +145,7 @@ export class TranscriptionService {
               createdAt: now(),
               updatedAt: now(),
               title: 'Untitled document',
+              chat: [],
               previewUrl:
                 '	https://img-previews.s3.eu-north-1.amazonaws.com/screenshot.png1711999247059',
             },

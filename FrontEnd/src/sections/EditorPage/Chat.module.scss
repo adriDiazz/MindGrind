@@ -61,7 +61,7 @@
     background-color: var(--white);
     border-radius: 5px;
     padding: 1rem;
-    z-index: 100;
+    z-index: 100000;
     font-family: 'MazzardR';
     opacity: 0;
     transition: opacity 0.5s ease-in-out;
@@ -69,6 +69,10 @@
 
 .chatWrapper.visible {
     opacity: 1;
+}
+
+.chatContent::-webkit-scrollbar {
+  display: none; /* Para navegadores WebKit como Chrome y Safari */
 }
 
 .chatBody{
@@ -109,23 +113,59 @@
     margin: 10px;
     padding: 10px;
     border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+        width: 1.5rem;
+        height: 1.5rem;
+        cursor: pointer;
+    }
+
 }
 
 .receivedMessage {
     align-self: flex-end;
-    background-color: #d1d1d1; /* Color de fondo para los mensajes recibidos */
+    background-color: #efefef; /* Color de fondo para los mensajes recibidos */
     color: var(--purple);
     margin: 10px;
     padding: 10px;
     border-radius: 10px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+        width: 1.5rem;
+        height: 1.5rem;
+        cursor: pointer;
+        margin-left: 10px;
+    }
+}
+
+.footerWrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
 }
 
 .chatContent {
     height: 80%;
     display: flex;
     flex-direction: column;
-    justify-content: end;
-    margin-bottom: 1rem
+    //justify-content: end;
+    margin-bottom: 1rem;
+    overflow-y: scroll;
+    z-index: 100000;
+
+    svg {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
 }
 
 .chatFooter {
@@ -136,18 +176,25 @@
     align-items: center;
     border-top: 1px solid var(--grey);
 
-    input {
+    textarea {
         width: 80%;
         border: none;
         border-radius: 5px;
-        padding: 0.5rem;
+        // padding: 0.5rem;
         font-family: 'MazzardR';
         border: var(--purple) 1px solid;
+        resize: none;
 
         &:focus {
             outline: var(--purple);
         }
     }
+
+    /* Estilos cuando el usuario empieza a escribir */
+textarea.focused, textarea:not(:placeholder-shown) {
+  padding-top: 10px; /* Vuelve al padding normal */
+  text-align: left; /* Alinea el texto a la izquierda */
+}
 
     button {
         width: 10%;

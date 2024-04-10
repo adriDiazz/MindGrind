@@ -11,6 +11,7 @@ export interface NoteType {
   title: string;
   category: string;
   previewUrl: string;
+  chat: [];
 }
 
 @Schema({ timestamps: true }) // Habilita las marcas de tiempo automáticas

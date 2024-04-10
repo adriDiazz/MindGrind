@@ -8,6 +8,7 @@ async function bootstrap() {
     origin: '*',
   });
   app.useGlobalFilters(new HttpExceptionFilter());
+
   await app.listen(3000);
 }
 bootstrap();
