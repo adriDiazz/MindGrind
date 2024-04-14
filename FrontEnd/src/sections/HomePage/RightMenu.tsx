@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import { userType } from "../../context/UserContext";
 import ArrowIcon from "../Ui/Icons/ArrowIcon";
+import ExamIcon from "../Ui/Icons/ExamIcon";
 import HomeIcon from "../Ui/Icons/HomeIcon";
 import NotesIcon from "../Ui/Icons/NotesIcon";
 import styles from "./HomePage.module.scss";
@@ -45,6 +46,18 @@ const LeftMenu: FC<User> = ({ user }) => {
 					<div className={styles.left}>
 						<NotesIcon />
 						<span>Notes</span>
+					</div>
+					<ArrowIcon />
+				</div>
+				<div
+					className={styles.section}
+					onClick={() => {
+						navigate("/exams");
+					}}
+				>
+					<div className={styles.left}>
+						<ExamIcon />
+						<span>Learning</span>
 					</div>
 					<ArrowIcon />
 				</div>

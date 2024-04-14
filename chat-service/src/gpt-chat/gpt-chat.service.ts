@@ -106,4 +106,57 @@ export class GptChatService {
       throw new Error('Error fetching chat');
     }
   }
+
+  async createExamWithChatGpt(note: string, userId: string) {
+    try {
+      const openai = new OpenAI({
+        apiKey: process.env.OPENAI_API_KEY,
+      });
+
+      const prompt = `
+        I need to create an exam for the next notes that i have been taking: [${note}], your response must be a JSON object with the following structure:
+        {
+          "questions": [
+            {
+              "question": "Question 1",
+              "options": ["Option 1", "Option 2", "Option 3", "Option 4"],
+              "answer": "Option 1"
+            },
+            {
+              "question": "Question 2",
+              "options": ["Option 1", "Option 2", "Option 3", "Option 4"],
+              "answer": "Option 2"
+            },
+            {
+              "question": "Question 3",
+              "options": ["Option 1", "Option 2", "Option 3", "Option 4"],
+              "answer": "Option 3"
+            },
+            {
+              "question": "Question 4",
+              "options": ["Option 1", "Option 2", "Option 3", "Option 4"],
+              "answer": "Option 4"
+            }
+          ]
+        }
+        Make al least 10 questions.
+        `;
+
+      const response = await openai.chat.completions.create({
+        model: 'gpt-4',
+        messages: [
+          {
+            role: 'assistant',
+            content: prompt,
+          },
+        ],
+        temperature: 1,
+        top_p: 1,
+      });
+      return response.choices[0].message;
+    } catch (error) {
+      console.error('Error fetching chat-gpt notes:', error);
+      throw new Error('Error fetching chat-gpt notes');
+    }
+  }
 }

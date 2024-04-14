@@ -6,8 +6,6 @@ import styles from "../HomePage/HomePage.module.scss";
 import LeftMenu from "../HomePage/RightMenu";
 import Loader from "../Ui/Loader";
 import NotesList from "./NotesList";
-import { useEffect } from "react";
-import Chat from "../EditorPage/Chat";
 
 const NotesPage = () => {
 	const { user } = useUser();

@@ -70,8 +70,6 @@ const VideoCard: FC<User> = ({
 			});
 	};
 
-	console.log(openedFile);
-
 	return (
 		<div className={styles.leftWrapper}>
 			<div className={styles.videoWrapper}>

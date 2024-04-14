@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import OpenAI from 'openai';
-import { YoutubeTranscript } from 'youtube-transcript';
+import { YoutubeTranscript } from '../utils/YT';
 import { countTextWords } from '../utils/utils';
 import { Readable } from 'stream';
 import { Model, now } from 'mongoose';
@@ -16,8 +16,9 @@ export class TranscriptionService {
     try {
       console.log('Fetching transcript for video:', videoId);
       const transcript = await YoutubeTranscript.fetchTranscript(videoId);
-      const fullText = transcript.map((line) => line.text).join(' ');
-      return fullText;
+      console.log('Transcript:', transcript);
+      // const fullText = transcript.map((line) => line.text).join(' ');
+      return transcript;
     } catch (error) {
       console.error('Error fetching transcript:', error);
       throw new Error('Error fetching transcript');

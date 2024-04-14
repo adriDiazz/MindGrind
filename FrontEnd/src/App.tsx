@@ -9,6 +9,7 @@ import HomePage from "./sections/HomePage/HomePage";
 import Landing from "./sections/Landing/Landing";
 import NotesPage from "./sections/NotesPage/NotesPage";
 import NavBar from "./sections/Ui/NavBar";
+import ExamPage from "./sections/ExamPage/ExamPage";
 
 export function App() {
 	const [isEditorUrl, setIsEditorUrl] = useState(false);
@@ -24,6 +25,7 @@ export function App() {
 							<Route path="/screenshot" element={<div>pito</div>} />
 							<Route path="/home" element={<HomePage setIsEditorUrl={setIsEditorUrl} />} />
 							<Route path="/editor" element={<EditorPage setIsEditorUrl={setIsEditorUrl} />} />
+							<Route path="/exams" element={<ExamPage />} />
 							<Route path="/notes">
 								<Route path="" element={<NotesPage />} />
 								<Route path=":noteId" element={<EditorPage setIsEditorUrl={setIsEditorUrl} />} />
