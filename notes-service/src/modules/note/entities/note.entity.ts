@@ -14,6 +14,9 @@ export class Note {
   @Column('jsonb', { nullable: true })
   notes: NoteType[];
 
+  @Column('simple-array', { nullable: true })
+  exams: Exam[];
+
   @Column()
   isDirectory: boolean;
 
@@ -38,4 +41,21 @@ export interface NoteType {
 export interface Chat {
   message: string;
   isSent: boolean;
+}
+
+export interface Exam {
+  exam: {
+    role: string;
+    content: {
+      questions: Question[];
+    };
+    score: number;
+    noteId: string;
+  };
+}
+
+interface Question {
+  question: string;
+  options: string[];
+  answer: string;
 }

@@ -14,6 +14,23 @@ export interface NoteType {
   chat: [];
 }
 
+export interface Exam {
+  exam: {
+    role: string;
+    content: {
+      questions: Question[];
+    };
+    score: number;
+    noteId: string;
+  };
+}
+
+interface Question {
+  question: string;
+  options: string[];
+  answer: string;
+}
+
 @Schema({ timestamps: true }) // Habilita las marcas de tiempo automáticas
 export class Note {
   @Prop()
@@ -21,6 +38,9 @@ export class Note {
 
   @Prop()
   notes: [NoteType];
+
+  @Prop()
+  exams: [Exam];
 
   @Prop()
   isDirectory: boolean;

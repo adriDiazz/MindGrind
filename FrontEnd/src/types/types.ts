@@ -26,3 +26,20 @@ export interface CreateNoteType {
 	data: ResponseApi | undefined;
 	user: userType | null;
 }
+
+interface Question {
+	question: string;
+	options: string[];
+	answer: string;
+}
+
+export interface Exam {
+	exam: {
+		role: string;
+		content: {
+			questions: Question[];
+		};
+		score: number;
+		noteId: string;
+	};
+}

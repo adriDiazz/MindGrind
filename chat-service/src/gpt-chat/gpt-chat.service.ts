@@ -4,6 +4,7 @@ import { countTextWords } from 'src/utils/utils';
 import { Chat, Note } from './entities/gpt-chat.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import e from 'express';
 
 @Injectable()
 export class GptChatService {
@@ -109,54 +110,83 @@ export class GptChatService {
 
   async createExamWithChatGpt(note: string, userId: string) {
     try {
+      // Initialize OpenAI client with your API key from the environment variables
       const openai = new OpenAI({
         apiKey: process.env.OPENAI_API_KEY,
       });
 
+      // Construct the prompt with more specific instructions and structured JSON
       const prompt = `
-        I need to create an exam for the next notes that i have been taking: [${note}], your response must be a JSON object with the following structure:
+        Create an exam with 10 new questions based on the topic/class notes: "${note}". Each question should have four options and one correct answer. Format the response as a JSON object with an array of questions:
         {
           "questions": [
             {
-              "question": "Question 1",
-              "options": ["Option 1", "Option 2", "Option 3", "Option 4"],
-              "answer": "Option 1"
-            },
-            {
-              "question": "Question 2",
-              "options": ["Option 1", "Option 2", "Option 3", "Option 4"],
-              "answer": "Option 2"
-            },
-            {
-              "question": "Question 3",
-              "options": ["Option 1", "Option 2", "Option 3", "Option 4"],
-              "answer": "Option 3"
-            },
-            {
-              "question": "Question 4",
-              "options": ["Option 1", "Option 2", "Option 3", "Option 4"],
-              "answer": "Option 4"
+              "question": "What is a key concept in ${note}?",
+              "options": ["Option A", "Option B", "Option C", "Option D"],
+              "answer": "Option A"
             }
           ]
         }
-        Make al least 10 questions.
-        `;
+        Please complete the array with nine more questions similarly structured.
+      `;
 
       const response = await openai.chat.completions.create({
         model: 'gpt-4',
         messages: [
           {
-            role: 'assistant',
+            role: 'user',
             content: prompt,
           },
         ],
-        temperature: 1,
+        temperature: 0.5, // Lower temperature for more predictable output
         top_p: 1,
+        // Adjust max_tokens based on need to generate sufficient content
       });
+
       return response.choices[0].message;
     } catch (error) {
-      console.error('Error fetching chat-gpt notes:', error);
-      throw new Error('Error fetching chat-gpt notes');
+      // Improved error handling with specific error message
+      console.error('Error fetching exam questions:', error);
+      throw new Error('Failed to create exam questions');
+    }
+  }
+
+  async saveExam(userId: string, exam: any, noteId: string) {
+    console.log('exam', noteId);
+    try {
+      const note = await this.chatRepository.findOne({
+        where: { userId },
+      });
+
+      if (!note) {
+        throw new Error('Note not found');
+      }
+
+      const newExam = { ...exam, score: 0, noteId };
+
+      note.exams.push(newExam);
+
+      return await this.chatRepository.update(note._id, note);
+    } catch (error) {
+      console.error('Error saving exam:', error);
+      throw new Error('Error saving exam');
+    }
+  }
+
+  async getExamsByUserId(userId: string) {
+    try {
+      const note = await this.chatRepository.findOne({
+        where: { userId },
+      });
+
+      if (!note) {
+        throw new Error('Note not found');
+      }
+
+      return note.exams;
+    } catch (error) {
+      console.error('Error fetching exam:', error);
+      throw new Error('Error fetching exam');
     }
   }
 }

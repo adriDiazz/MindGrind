@@ -1,3 +1,5 @@
+import { CSSProperties } from "react";
+
 import style from "./Button.module.scss";
 
 interface ButtonProps {
@@ -7,14 +9,23 @@ interface ButtonProps {
 	id?: string;
 	onClick?: () => void;
 	type?: "button" | "submit" | "reset";
+	extraStyles?: CSSProperties;
 }
 
-const Button: React.FC<ButtonProps> = ({ className = "", isWhite, id, type, ...props }) => {
+const Button: React.FC<ButtonProps> = ({
+	className = "",
+	isWhite,
+	id,
+	type,
+	extraStyles,
+	...props
+}) => {
 	return (
 		<button
 			{...props}
 			id={id}
 			type={type}
+			style={extraStyles}
 			className={`${isWhite ? style.buttonWhite : ""}  ${
 				!isWhite ? style.button : ""
 			} ${className}                     

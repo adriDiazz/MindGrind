@@ -151,6 +151,7 @@ export class TranscriptionService {
                 '	https://img-previews.s3.eu-north-1.amazonaws.com/screenshot.png1711999247059',
             },
           ],
+          exams: [],
           isDirectory: false,
         });
         const data = await newNote.save();
