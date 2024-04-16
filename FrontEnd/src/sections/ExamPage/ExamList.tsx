@@ -1,11 +1,11 @@
 import { Gauge, gaugeClasses } from "@mui/x-charts/Gauge";
 import React, { useEffect, useState } from "react";
 
+import { useUser } from "../../context/UserContext";
+import { getExams } from "../../services/ExamService";
 import Button from "../Ui/Button";
 import ArrowCollapseIcon from "../Ui/Icons/ArrowCollapseIcon";
 import styles from "./ExamPage.module.scss";
-import { getExams } from "../../services/ExamService";
-import { useUser } from "../../context/UserContext";
 
 interface ExamListPageProps {
 	setOpened: React.Dispatch<React.SetStateAction<boolean>>;
@@ -13,25 +13,19 @@ interface ExamListPageProps {
 
 function ExamListPage({ setOpened }: ExamListPageProps) {
 	// Estado para controlar la visibilidad de cada examCardItem
-	const [collapsed, setCollapsed] = useState({
-		1: true,
-		2: true,
-		3: true,
-		4: true,
-	});
+	const [collapsed, setCollapsed] = useState({});
 	const [exams, setExams] = useState([]);
 	const { user } = useUser();
 
-	console.log(exams.exams);
+	console.log(exams);
 
-	const toggleCollapse = (id: number, event) => {
+	const toggleCollapse = (id: string, event) => {
 		// Cambia el estado de colapsado para el id específico
 		setCollapsed((prev) => ({ ...prev, [id]: !prev[id] }));
 	};
 
 	useEffect(() => {
 		getExams(user?.userId).then((exams) => {
-			console.log(exams);
 			setExams(exams);
 		});
 	}, [user]);
@@ -51,28 +45,38 @@ function ExamListPage({ setOpened }: ExamListPageProps) {
 			</div>
 
 			<div className={styles.examWrapper} style={{ width: "100%" }}>
-				{exams?.exams?.map((examId) => (
-					<div key={examId} className={styles.examCardItem} onClick={() => toggleCollapse(examId)}>
+				{
+					// Si no hay exámenes, muestra un mensaje
+					!exams.exams?.length && <p>No exams created yet</p>
+				}
+				{exams.exams?.map((examItem) => (
+					<div
+						key={examItem.exam.examId}
+						className={styles.examCardItem}
+						onClick={() => toggleCollapse(examItem.exam.examId)}
+					>
 						<div className={styles.examCardItemTop}>
-							<h3>Exam</h3>
+							<h3>{examItem.exam.title}</h3>
 							<ArrowCollapseIcon
 								onClick={(event) => {
 									event.stopPropagation();
-									toggleCollapse(examId, event);
+									toggleCollapse(examItem.exam.examId, event);
 								}}
 								style={{
-									transform: !collapsed[examId] ? "rotate(180deg)" : "rotate(0deg)",
+									transform: collapsed[examItem.exam.examId] ? "rotate(180deg)" : "rotate(0deg)",
 									transition: "transform 0.3s ease",
 								}}
 							/>
 						</div>
 						{/* Contenido que será colapsable */}
 						<div
-							style={{ display: collapsed[examId] ? "none" : "flex" }}
+							style={{
+								display: !collapsed[examItem.exam.examId] ? "none" : "flex",
+							}}
 							className={styles.uncollapsed}
 						>
 							<Gauge
-								value={75}
+								value={examItem.exam.score}
 								startAngle={-110}
 								endAngle={110}
 								width={100}
@@ -115,11 +119,19 @@ function ExamListPage({ setOpened }: ExamListPageProps) {
 										Delete exam
 									</Button>
 									<Button
+										isWhite
 										extraStyles={{
 											padding: "0.5rem 0.5rem",
 										}}
 									>
 										Repeat exam
+									</Button>
+									<Button
+										extraStyles={{
+											padding: "0.5rem 0.5rem",
+										}}
+									>
+										View exam
 									</Button>
 								</div>
 							</div>

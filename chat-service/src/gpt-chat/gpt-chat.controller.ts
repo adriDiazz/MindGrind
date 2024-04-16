@@ -2,6 +2,8 @@ import { Controller, Post, Body, Get, Param } from '@nestjs/common';
 import { GptChatService } from './gpt-chat.service';
 import { NoteType } from './entities/gpt-chat.entity';
 import { Console } from 'console';
+import { randomUUID } from 'crypto';
+import { title } from 'process';
 
 @Controller({ path: 'chats', version: '1' })
 export class GptChatController {
@@ -97,11 +99,19 @@ export class GptChatController {
     },
   ) {
     try {
+      const getNote = await this.gptChatService.getNoteById(
+        userId,
+        note.noteId,
+      );
       const exam = {
         exam: {
           role: 'assistant',
           content:
             '{\n  "questions": [\n    {\n      "question": "What is the main topic of \'# Resumen de la polera de la monarquía española\'?",\n      "options": ["The history of the Spanish monarchy", "The history of the French monarchy", "The history of the British monarchy", "The history of the Russian monarchy"],\n      "answer": "The history of the Spanish monarchy"\n    },\n    {\n      "question": "What does \'Memorias de Pezos\' refer to in the context of the notes?",\n      "options": ["A Spanish history book", "A Spanish TV show", "A Spanish podcast", "A Spanish newspaper"],\n      "answer": "A Spanish podcast"\n    },\n    {\n      "question": "What is the main purpose of the \'# Resumen de la polera de la monarquía española\'?",\n      "options": ["To criticize the Spanish monarchy", "To praise the Spanish monarchy", "To provide a brief review of the Spanish monarchy", "To compare the Spanish monarchy with other monarchies"],\n      "answer": "To provide a brief review of the Spanish monarchy"\n    },\n    {\n      "question": "In which language is \'# Resumen de la polera de la monarquía española\' primarily written?",\n      "options": ["English", "French", "Spanish", "Italian"],\n      "answer": "Spanish"\n    },\n    {\n      "question": "What is the format of \'# Resumen de la polera de la monarquía española\'?",\n      "options": ["A video", "A podcast", "A written document", "A live lecture"],\n      "answer": "A written document"\n    },\n    {\n      "question": "What does \'polera\' refer to in the context of the notes?",\n      "options": ["A type of Spanish dance", "A type of Spanish food", "A type of Spanish clothing", "A type of Spanish music"],\n      "answer": "A type of Spanish clothing"\n    },\n    {\n      "question": "What is the main period discussed in \'# Resumen de la polera de la monarquía española\'?",\n      "options": ["The Spanish Civil War", "The Spanish Inquisition", "The Spanish Golden Age", "The Spanish Reconquista"],\n      "answer": "The Spanish Golden Age"\n    },\n    {\n      "question": "Who is the intended audience for \'# Resumen de la polera de la monarquía española\'?",\n      "options": ["Students studying Spanish history", "Tourists visiting Spain", "Spanish citizens", "Professional historians"],\n      "answer": "Students studying Spanish history"\n    },\n    {\n      "question": "What is the main source of information for \'# Resumen de la polera de la monarquía española\'?",\n      "options": ["Primary sources", "Secondary sources", "Tertiary sources", "Quaternary sources"],\n      "answer": "Secondary sources"\n    },\n    {\n      "question": "What is the main goal of \'# Resumen de la polera de la monarquía española\'?",\n      "options": ["To educate", "To entertain", "To persuade", "To inform"],\n      "answer": "To educate"\n    }\n  ]\n}',
+          score: 0,
+          noteId: note.noteId,
+          examId: randomUUID(),
+          title: getNote.title,
         },
       };
       console.log('exam', note.noteId);

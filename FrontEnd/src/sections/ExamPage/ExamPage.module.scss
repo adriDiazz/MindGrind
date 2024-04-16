@@ -5,10 +5,42 @@
   justify-content: flex-start;
   align-items: center;
   flex-direction: column;
-  gap: 4rem;
   overflow-y: scroll;
   font-family: "MazzardR";
 }
+
+.leftWrapperList::-webkit-scrollbar {
+  display: none; /* Para navegadores WebKit como Chrome y Safari */
+}
+
+
+.examTopBar {
+    width: 80%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+    input[type="radio"] {
+      appearance: none;
+      background-color: #fff;
+      border: 2px solid #ccc;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      margin-right: 10px;
+      transition: background-color 0.3s, border-color 0.3s;
+
+      &:hover {
+        border-color: #888;
+      }
+
+      &:checked {
+        background-color: var(--purple);
+        border-color: var(--purple);
+      }
+    }
 
 .leftWrapperList {
   width: 100%;
@@ -48,6 +80,7 @@
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     padding: 1rem;
     gap: 1rem;
+    margin-bottom: 4rem;
 }
 
 .examCardItem {
@@ -144,6 +177,7 @@
             display: flex;
             align-items: center;
             gap: 1rem;
+            cursor: pointer;
         }
     }
 }

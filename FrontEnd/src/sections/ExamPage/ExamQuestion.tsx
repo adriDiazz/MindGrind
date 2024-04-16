@@ -1,69 +1,36 @@
+import { FC } from "react";
+
+import { Question } from "../../types/types";
 import styles from "./ExamPage.module.scss";
 
-const ExamQuestion = () => {
-	const handleOptionChange = (event) => {
-		console.log("Opción seleccionada:", event.target.value);
-	};
+interface ExamQuestionProps {
+	question: Question;
+	index: number;
+	setAnswered: () => void;
+}
 
-	const handleClick = (inputId) => {
-		document.getElementById(inputId).click();
-	};
-
+const ExamQuestion: FC<ExamQuestionProps> = ({ question, index, setAnswered }) => {
 	return (
 		<div className={styles.examCard}>
 			<div className={styles.title}>
-				<h2 style={{ margin: "0" }}>1-</h2>
-				<h3>Pregunta de examen 1</h3>
+				<h2 style={{ margin: "0" }}>{index + 1}-</h2>
+				<h3>{question.question}</h3>
 			</div>
 			<div className={styles.options}>
-				<div className={styles.option} onClick={() => handleClick("option1")}>
-					<label htmlFor="option1">
-						<input
-							type="radio"
-							name="option"
-							id="option1"
-							value="Opción 1"
-							onChange={handleOptionChange}
-						/>
-						Opción 1
-					</label>
-				</div>
-				<div className={styles.option} onClick={() => handleClick("option2")}>
-					<label htmlFor="option2">
-						<input
-							type="radio"
-							name="option"
-							id="option2"
-							value="Opción 2"
-							onChange={handleOptionChange}
-						/>
-						Opción 2
-					</label>
-				</div>
-				<div className={styles.option} onClick={() => handleClick("option3")}>
-					<label htmlFor="option3">
-						<input
-							type="radio"
-							name="option"
-							id="option3"
-							value="Opción 3"
-							onChange={handleOptionChange}
-						/>
-						Opción 3
-					</label>
-				</div>
-				<div className={styles.option} onClick={() => handleClick("option4")}>
-					<label htmlFor="option4">
-						<input
-							type="radio"
-							name="option"
-							id="option4"
-							value="Opción 4"
-							onChange={handleOptionChange}
-						/>
-						Opción 4
-					</label>
-				</div>
+				{question.options.map((option, optionIndex) => (
+					<div key={optionIndex} className={styles.option}>
+						<label htmlFor={`option-${index}-${optionIndex}`}>
+							<input
+								type="radio"
+								name={`question-${index}-option`}
+								id={`option-${index}-${optionIndex}`}
+								value={option}
+								onChange={setAnswered} // Llamar a setAnswered cuando se cambia la selección
+							/>
+							{option}
+						</label>
+					</div>
+				))}
 			</div>
 		</div>
 	);

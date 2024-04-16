@@ -9,3 +9,21 @@ export const getExams = async (userId: string) => {
 		console.log(error);
 	}
 };
+
+export const createExam = async (userId: string | undefined, note: string | undefined, noteId: string) => {
+	try {
+		const response = await fetch(`${String(import.meta.env.VITE_API_EXAM)}${userId}`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({ note, noteId }),
+		});
+		const data = await response.json();
+
+		return data;
+	} catch (error) {
+		// eslint-disable-next-line no-console
+		console.log(error);
+	}
+};

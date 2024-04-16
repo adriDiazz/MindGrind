@@ -5,11 +5,13 @@ import { NotesProvider } from "./context/NoteContext";
 import { SelectedNoteProvider } from "./context/SelectedNoteContext";
 import { UserProvider } from "./context/UserContext";
 import EditorPage from "./sections/EditorPage/EditorPage";
+import ExamPage from "./sections/ExamPage/ExamPage";
 import HomePage from "./sections/HomePage/HomePage";
 import Landing from "./sections/Landing/Landing";
 import NotesPage from "./sections/NotesPage/NotesPage";
 import NavBar from "./sections/Ui/NavBar";
-import ExamPage from "./sections/ExamPage/ExamPage";
+import Exam from "./sections/ExamPage/Exam";
+import ExamComponent from "./sections/ExamPage/Exam";
 
 export function App() {
 	const [isEditorUrl, setIsEditorUrl] = useState(false);
@@ -26,6 +28,10 @@ export function App() {
 							<Route path="/home" element={<HomePage setIsEditorUrl={setIsEditorUrl} />} />
 							<Route path="/editor" element={<EditorPage setIsEditorUrl={setIsEditorUrl} />} />
 							<Route path="/exams" element={<ExamPage />} />
+							<Route path="/exams">
+								<Route path="" element={<ExamPage />} />
+								<Route path=":noteId" element={<ExamComponent />} />
+							</Route>
 							<Route path="/notes">
 								<Route path="" element={<NotesPage />} />
 								<Route path=":noteId" element={<EditorPage setIsEditorUrl={setIsEditorUrl} />} />

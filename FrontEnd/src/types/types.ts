@@ -27,7 +27,7 @@ export interface CreateNoteType {
 	user: userType | null;
 }
 
-interface Question {
+export interface Question {
 	question: string;
 	options: string[];
 	answer: string;
@@ -41,5 +41,6 @@ export interface Exam {
 		};
 		score: number;
 		noteId: string;
+		examId: string;
 	};
 }

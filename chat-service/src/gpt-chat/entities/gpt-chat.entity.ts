@@ -51,6 +51,8 @@ export interface Exam {
     };
     score: number;
     noteId: string;
+    examId: string;
+    title: string;
   };
 }
 

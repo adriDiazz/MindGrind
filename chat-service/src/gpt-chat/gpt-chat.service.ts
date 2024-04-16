@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import OpenAI from 'openai';
 import { countTextWords } from 'src/utils/utils';
-import { Chat, Note } from './entities/gpt-chat.entity';
+import { Note } from './entities/gpt-chat.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import e from 'express';
 
 @Injectable()
 export class GptChatService {
@@ -162,7 +161,7 @@ export class GptChatService {
         throw new Error('Note not found');
       }
 
-      const newExam = { ...exam, score: 0, noteId };
+      const newExam = { ...exam };
 
       note.exams.push(newExam);
 
@@ -187,6 +186,29 @@ export class GptChatService {
     } catch (error) {
       console.error('Error fetching exam:', error);
       throw new Error('Error fetching exam');
+    }
+  }
+
+  async getNoteById(userId: string, noteId: string) {
+    try {
+      const note = await this.chatRepository.findOne({
+        where: { userId },
+      });
+
+      if (!note) {
+        throw new Error('Note not found');
+      }
+
+      const noteIndex = note.notes.findIndex((n) => n.noteId === noteId);
+
+      if (noteIndex === -1) {
+        throw new Error('Note not found');
+      }
+
+      return note.notes[noteIndex];
+    } catch (error) {
+      console.error('Error fetching note:', error);
+      throw new Error('Error fetching note');
     }
   }
 }
