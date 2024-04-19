@@ -6,10 +6,11 @@ import styles from "./ExamPage.module.scss";
 interface ExamQuestionProps {
 	question: Question;
 	index: number;
-	setAnswered: () => void;
+	setExamAnswers: (value: React.SetStateAction<string[]>) => void;
+	examAnswers: string[];
 }
 
-const ExamQuestion: FC<ExamQuestionProps> = ({ question, index, setAnswered }) => {
+const ExamQuestion: FC<ExamQuestionProps> = ({ question, index, setExamAnswers, examAnswers }) => {
 	return (
 		<div className={styles.examCard}>
 			<div className={styles.title}>
@@ -25,7 +26,23 @@ const ExamQuestion: FC<ExamQuestionProps> = ({ question, index, setAnswered }) =
 								name={`question-${index}-option`}
 								id={`option-${index}-${optionIndex}`}
 								value={option}
-								onChange={setAnswered} // Llamar a setAnswered cuando se cambia la selección
+								onChange={(e) =>
+									setExamAnswers((prev) => {
+										const existingIndex = prev.findIndex((item) => item.id === index);
+										if (existingIndex >= 0) {
+											// Si existe una respuesta anterior para esta pregunta, actualízala
+											const updatedAnswers = [...prev];
+											updatedAnswers[existingIndex] = {
+												id: index,
+												answer: e.target.value,
+											};
+
+											return updatedAnswers;
+										}
+
+										return [...prev, { id: index, answer: e.target.value }];
+									})
+								}
 							/>
 							{option}
 						</label>

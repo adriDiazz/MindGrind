@@ -6,6 +6,9 @@ import { getExams } from "../../services/ExamService";
 import Button from "../Ui/Button";
 import ArrowCollapseIcon from "../Ui/Icons/ArrowCollapseIcon";
 import styles from "./ExamPage.module.scss";
+import { useNavigate } from "react-router-dom";
+import ModalComponent from "../Ui/ModalComponent";
+import ModalViewExam from "./ModalViewExam";
 
 interface ExamListPageProps {
 	setOpened: React.Dispatch<React.SetStateAction<boolean>>;
@@ -15,12 +18,14 @@ function ExamListPage({ setOpened }: ExamListPageProps) {
 	// Estado para controlar la visibilidad de cada examCardItem
 	const [collapsed, setCollapsed] = useState({});
 	const [exams, setExams] = useState([]);
+	const [opener, setOpener] = useState(false);
+	const [viewExamClicked, setViewExamClicked] = useState();
 	const { user } = useUser();
-
-	console.log(exams);
+	const navigate = useNavigate();
 
 	const toggleCollapse = (id: string, event) => {
 		// Cambia el estado de colapsado para el id específico
+		event.stopPropagation();
 		setCollapsed((prev) => ({ ...prev, [id]: !prev[id] }));
 	};
 
@@ -43,6 +48,10 @@ function ExamListPage({ setOpened }: ExamListPageProps) {
 					Create
 				</Button>
 			</div>
+
+			<ModalComponent setOpened={setOpener} opened={opener}>
+				<ModalViewExam examInfo={viewExamClicked} />
+			</ModalComponent>
 
 			<div className={styles.examWrapper} style={{ width: "100%" }}>
 				{
@@ -81,6 +90,7 @@ function ExamListPage({ setOpened }: ExamListPageProps) {
 								endAngle={110}
 								width={100}
 								height={100}
+								valueMax={10}
 								sx={{
 									flexGrow: 0,
 									WebkitFlexGrow: 0,
@@ -123,12 +133,21 @@ function ExamListPage({ setOpened }: ExamListPageProps) {
 										extraStyles={{
 											padding: "0.5rem 0.5rem",
 										}}
+										onClick={() => {
+											navigate(`/exams/${examItem.exam.examId}`, {
+												state: { exam: examItem.exam },
+											});
+										}}
 									>
 										Repeat exam
 									</Button>
 									<Button
 										extraStyles={{
 											padding: "0.5rem 0.5rem",
+										}}
+										onClick={() => {
+											setOpener(true);
+											setViewExamClicked(examItem.exam);
 										}}
 									>
 										View exam

@@ -1,6 +1,6 @@
 import { Controller, Post, Body, Get, Param } from '@nestjs/common';
 import { GptChatService } from './gpt-chat.service';
-import { NoteType } from './entities/gpt-chat.entity';
+import { Exam, NoteType } from './entities/gpt-chat.entity';
 import { Console } from 'console';
 import { randomUUID } from 'crypto';
 import { title } from 'process';
@@ -114,7 +114,6 @@ export class GptChatController {
           title: getNote.title,
         },
       };
-      console.log('exam', note.noteId);
 
       const saved = await this.gptChatService.saveExam(
         userId,
@@ -124,6 +123,25 @@ export class GptChatController {
 
       return {
         exam,
+      };
+    } catch (error) {
+      return {
+        error: error.message,
+      };
+    }
+  }
+
+  @Post('/exams/update/:userId')
+  async updateExamPost(
+    @Param('userId') userId: string,
+    @Body()
+    exam: Exam,
+  ) {
+    try {
+      console.log('exam', exam);
+      const updated = await this.gptChatService.updateExam(userId, exam);
+      return {
+        updated,
       };
     } catch (error) {
       return {

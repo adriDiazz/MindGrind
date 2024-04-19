@@ -21,8 +21,6 @@ const ModalCreateExam = () => {
 
 	const currentNote = notes.find((note) => note.noteId === selectedNote);
 
-	console.log("currentNote", currentNote);
-
 	const handleCreateExam = async () => {
 		setLoading(true);
 		const created = (await createExam(user?.userId, currentNote?.note, selectedNote)) as

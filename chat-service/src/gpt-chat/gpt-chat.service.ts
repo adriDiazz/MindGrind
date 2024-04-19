@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import OpenAI from 'openai';
 import { countTextWords } from 'src/utils/utils';
-import { Note } from './entities/gpt-chat.entity';
+import { Exam, Note } from './entities/gpt-chat.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -209,6 +209,33 @@ export class GptChatService {
     } catch (error) {
       console.error('Error fetching note:', error);
       throw new Error('Error fetching note');
+    }
+  }
+
+  async updateExam(userId: string, exam: Exam) {
+    try {
+      const note = await this.chatRepository.findOne({
+        where: { userId },
+      });
+
+      if (!note) {
+        throw new Error('Note not found');
+      }
+
+      const examIndex = note.exams.findIndex(
+        (e) => e.exam.examId === exam.exam.examId,
+      );
+
+      if (examIndex === -1) {
+        throw new Error('Exam not found');
+      }
+
+      note.exams[examIndex] = exam;
+
+      return await this.chatRepository.update(note._id, note);
+    } catch (error) {
+      console.error('Error updating exam:', error);
+      throw new Error('Error updating exam');
     }
   }
 }
