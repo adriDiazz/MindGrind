@@ -18,7 +18,6 @@ export class GptChatService {
 
       if (transcriptionLenght > 1000) {
         transcription = transcription.slice(0, 1000);
-        console.log('transcription', transcription.length);
       }
       const openai = new OpenAI({
         apiKey: '',
@@ -114,6 +113,11 @@ export class GptChatService {
         apiKey: process.env.OPENAI_API_KEY,
       });
 
+      const noteLenght = countTextWords(note);
+
+      if (noteLenght > 1000) {
+        note = note.slice(0, 1000);
+      }
       // Construct the prompt with more specific instructions and structured JSON
       const prompt = `
         Create an exam with 10 new questions based on the topic/class notes: "${note}". Each question should have four options and one correct answer. Format the response as a JSON object with an array of questions:
