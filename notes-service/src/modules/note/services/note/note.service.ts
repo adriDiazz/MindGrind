@@ -17,9 +17,13 @@ export class NoteService implements INoteRepository {
   }
 
   async getLastModifiedNotes(userId: string): Promise<NoteType[]> {
-    const userNotes = (await this.noteRepository.getNotes(userId))?.notes;
+    let userNotes = (await this.noteRepository.getNotes(userId))?.notes;
 
-    if (userNotes.length === 0) {
+    if (!userNotes) {
+      userNotes = [];
+    }
+
+    if (userNotes.length === 0 || !userNotes) {
       return null;
     }
 

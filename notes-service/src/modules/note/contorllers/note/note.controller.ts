@@ -16,8 +16,14 @@ export class NoteController {
   constructor(private readonly noteService: NoteService) {}
 
   @Get(':userId')
-  getNotes(@Param('userId') userId: string) {
-    return this.noteService.getNotes(userId);
+  async getNotes(@Param('userId') userId: string) {
+    const data = await this.noteService.getNotes(userId);
+
+    if (data) {
+      return data;
+    }
+
+    return [];
   }
 
   @Get('last/:userId')

@@ -23,7 +23,6 @@ export class AwsController {
     @Param('userId') userId: string,
     @Param('noteId') noteId: string,
   ) {
-    console.log('file', file);
     const saved = await this.awsService.uploadFile(file);
     if (saved) {
       return this.awsService.saveImageRecord(saved, userId, noteId);

@@ -21,9 +21,6 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@editorjs/editorjs": "^2.29.0",
-    "@editorjs/paragraph": "^2.11.3",
-    "@google-cloud/speech": "^6.1.1",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.1.1",
     "@nestjs/core": "^10.0.0",

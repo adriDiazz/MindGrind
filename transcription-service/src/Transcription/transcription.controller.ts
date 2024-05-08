@@ -5,13 +5,11 @@ import {
   Param,
   Post,
   UploadedFile,
-  UseFilters,
   UseInterceptors,
 } from '@nestjs/common';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { TranscriptionService } from './transcription.service';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { HttpExceptionFilter } from 'src/utils/HttpExceptionFilter';
 
 @Controller('youtube-transcript')
 export class TranscriptionController {
