@@ -20,7 +20,7 @@ export class TranscriptionController {
     const transcription =
       await this.TranscriptionService.fetchTranscript(videoId);
     const chatGptNotes =
-      await this.TranscriptionService.getNotesFake(transcription);
+      await this.TranscriptionService.getChatGptNotes(transcription);
 
     return { chatGptNotes };
   }
@@ -38,7 +38,6 @@ export class TranscriptionController {
       body.note,
       body.userId,
     );
-    console.log('savedNote', savedNote);
     return savedNote;
   }
 

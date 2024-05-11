@@ -35,8 +35,11 @@ export class GptChatController {
         noteId,
         userId,
       );
+      const response = await this.gptChatService.getChatGptResponse(
+        message.message,
+      );
       const generatedMessage = {
-        message: 'Mensaje generado por GPT-3',
+        message: response,
         isSent: false,
       };
       const saveResponse = await this.gptChatService.saveChatGptChat(

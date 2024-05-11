@@ -14,9 +14,7 @@ export class TranscriptionService {
 
   async fetchTranscript(videoId: string): Promise<string> {
     try {
-      console.log('Fetching transcript for video:', videoId);
       const transcript = await YoutubeTranscript.fetchTranscript(videoId);
-      console.log('Transcript:', transcript);
       // const fullText = transcript.map((line) => line.text).join(' ');
       return transcript;
     } catch (error) {
@@ -88,7 +86,7 @@ export class TranscriptionService {
         console.log('transcription', transcription.length);
       }
       const openai = new OpenAI({
-        apiKey: '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',
+        apiKey: process.env.OPENAI_API_KEY,
       });
 
       const prompt = `As a [ABC Course Student], I'm preparing notes on the subject/topic [${transcription}]. I need you to act as an expert professor and provide me with comprehensive and well-structured notes.Here are the guidelines for the notes:\n\n1. Key Terms and Concepts: Include definitions of key terms and insights about main ideas. Use appropriate examples for a better understanding of the topic.\n\n2. Styling: Use H2 for the main headings and questions and H3 for all the sub-headings. You must include related emojis to make the notes engaging. Use bold and italic formatting for emphasis and clarity.\n\n3. Questions and Answers: Generate a list of potential questions and detailed answers that someone studying this subject might need to know.\n\n4. Structure: Summarize the information logically using bulleted or numbered points.\n\nCondition: Please ensure the notes cover the following topics: [ALL THE TOPICS]`;
@@ -104,7 +102,7 @@ export class TranscriptionService {
         temperature: 1,
         top_p: 1,
       });
-      return response.choices[0].message;
+      return response.choices[0].message.content;
     } catch (error) {
       console.error('Error fetching chat-gpt notes:', error);
       throw new Error('Error fetching chat-gpt notes');
