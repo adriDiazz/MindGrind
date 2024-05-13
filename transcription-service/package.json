@@ -31,7 +31,7 @@
     "helmet": "^7.1.0",
     "mongoose": "^8.1.1",
     "node-html-parser": "^6.1.13",
-    "openai": "^4.26.0",
+    "openai": "^4.46.0",
     "pdfreader": "^3.0.2",
     "react-editor-js": "^2.1.0",
     "reflect-metadata": "^0.1.13",

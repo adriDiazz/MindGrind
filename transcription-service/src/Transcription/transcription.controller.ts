@@ -52,7 +52,7 @@ export class TranscriptionController {
   async processPdf(@UploadedFile() pdfFile) {
     const transcription = await this.TranscriptionService.processPdf(pdfFile);
     const chatGptNotes =
-      await this.TranscriptionService.getNotesFake(transcription);
+      await this.TranscriptionService.getChatGptNotes(transcription);
     return { chatGptNotes };
   }
 }
