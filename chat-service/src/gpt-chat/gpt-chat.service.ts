@@ -132,7 +132,7 @@ export class GptChatService {
       `;
 
       const response = await openai.chat.completions.create({
-        model: 'gpt-4',
+        model: 'gpt-4o',
         messages: [
           {
             role: 'user',
@@ -144,7 +144,14 @@ export class GptChatService {
         // Adjust max_tokens based on need to generate sufficient content
       });
 
-      return response.choices[0].message.content;
+      if (response.choices[0].message.content.startsWith('```json')) {
+        return response.choices[0].message.content
+          .replace('```json', '')
+          .replace('```', '');
+      } else {
+        return response.choices[0].message.content;
+      }
+      throw new Error('Failed to create exam questions');
     } catch (error) {
       // Improved error handling with specific error message
       console.error('Error fetching exam questions:', error);
