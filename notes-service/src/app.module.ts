@@ -4,6 +4,7 @@ import { Note } from './modules/note/entities/note.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { NoteModule } from './modules/note/note.module';
 import { ImageModule } from './modules/image/image.module';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   imports: [
@@ -21,6 +22,9 @@ import { ImageModule } from './modules/image/image.module';
         synchronize: true,
       }),
     }),
+    MongooseModule.forRoot(
+      `mongodb+srv://adriandiazmanzanares9:${process.env.MONGO_PASS}@mindgrind.ljuvwzf.mongodb.net/MindGrind`,
+    ),
   ],
   controllers: [],
   providers: [],

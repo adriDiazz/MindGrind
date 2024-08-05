@@ -1,6 +1,6 @@
 import { Controller, Post, Body, Get, Param } from '@nestjs/common';
-import { GptChatService } from './gpt-chat.service';
-import { Exam, NoteType } from './entities/gpt-chat.entity';
+import { GptChatService } from '../../services/chat/gpt-chat.service';
+import { Exam, NoteType } from '../../entities/gpt-chat.entity';
 import { Console } from 'console';
 import { randomUUID } from 'crypto';
 import { title } from 'process';

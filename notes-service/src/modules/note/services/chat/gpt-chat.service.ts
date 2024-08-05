@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import OpenAI from 'openai';
+import { openai } from '@ai-sdk/openai';
+import { generateText } from 'ai';
 import { countTextWords } from 'src/utils/utils';
-import { Exam, Note } from './entities/gpt-chat.entity';
+import { Exam, Note } from '../../entities/gpt-chat.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -19,22 +20,13 @@ export class GptChatService {
       if (transcriptionLenght > 1000) {
         transcription = transcription.slice(0, 1000);
       }
-      const openai = new OpenAI({
-        apiKey: process.env.OPENAI_API_KEY,
+      
+      const { text } = await generateText({
+        model: openai('gpt-4o-mini'),
+        system: `Act like a chat, you are helping a student with a question. The student is asking for help with the following question: "${transcription}"`,
+        prompt: transcription,
       });
-
-      const response = await openai.chat.completions.create({
-        model: 'gpt-4',
-        messages: [
-          {
-            role: 'user',
-            content: transcription,
-          },
-        ],
-        temperature: 1,
-        top_p: 1,
-      });
-      return response.choices[0].message.content;
+      return text;
     } catch (error) {
       console.error('Error fetching chat-gpt notes:', error);
       throw new Error('Error fetching chat-gpt notes');
@@ -106,11 +98,6 @@ export class GptChatService {
 
   async createExamWithChatGpt(note: string, userId: string) {
     try {
-      // Initialize OpenAI client with your API key from the environment variables
-      const openai = new OpenAI({
-        apiKey: process.env.OPENAI_API_KEY,
-      });
-
       const noteLenght = countTextWords(note);
 
       if (noteLenght > 1000) {
@@ -131,27 +118,32 @@ export class GptChatService {
         Please complete the array with nine more questions similarly structured.
       `;
 
-      const response = await openai.chat.completions.create({
-        model: 'gpt-4o',
-        messages: [
-          {
-            role: 'user',
-            content: prompt,
-          },
-        ],
-        temperature: 0.5, // Lower temperature for more predictable output
-        top_p: 1,
-        // Adjust max_tokens based on need to generate sufficient content
+      const { text } = await generateText({
+        model: openai('gpt-4o'),
+        system: `
+          You are a teacher preparing an exam for students based on the topic/class notes: "${note}". Create an exam with 10 new questions based on the topic/class notes: "${note}". Each question should have four options and one correct answer. Format the response as a JSON object with an array of questions:
+        {
+          "questions": [
+            {
+              "question": "What is a key concept in ${note}?",
+              "options": ["Option A", "Option B", "Option C", "Option D"],
+              "answer": "Option A"
+            }
+          ]
+        }
+        Please complete the array with nine more questions similarly structured.`,
+        prompt: prompt,
       });
 
-      if (response.choices[0].message.content.startsWith('```json')) {
-        return response.choices[0].message.content
+      
+
+      if (text.startsWith('```json')) {
+        return text
           .replace('```json', '')
           .replace('```', '');
       } else {
-        return response.choices[0].message.content;
+        return text;
       }
-      throw new Error('Failed to create exam questions');
     } catch (error) {
       // Improved error handling with specific error message
       console.error('Error fetching exam questions:', error);
